@@ -897,6 +897,8 @@ name = "df"
 version = "0.1.0"
 dependencies = [
  "amethyst 0.15.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log 0.4.8 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde 1.0.106 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

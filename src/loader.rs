@@ -49,9 +49,7 @@ impl SimpleState for LoadingState {
         .background_texture_handle
         .take()
         .expect("Expected `background_texture_handle` to be loaded.");
-      Trans::Switch(Box::new(MenuState {
-        background_texture_handle,
-      }))
+      Trans::Switch(Box::new(MenuState::default()))
     } else {
       Trans::None
     }
