@@ -9,6 +9,7 @@ use amethyst::{
     types::DefaultBackend,
     RenderingBundle,
   },
+  tiles::{MortonEncoder, RenderTiles2D},
   ui::{RenderUi, UiBundle},
   utils::{
     application_root_dir,
@@ -16,13 +17,16 @@ use amethyst::{
     scene::BasicScenePrefab,
   },
 };
+
 use log::info;
 
 mod game;
 mod loader;
 mod menu;
 
+use crate::game::ExampleTile;
 use crate::loader::LoadingState;
+
 type MyPrefabData = BasicScenePrefab<(Vec<Position>, Vec<Normal>, Vec<TexCoord>)>;
 
 fn main() -> amethyst::Result<()> {
@@ -39,13 +43,12 @@ fn main() -> amethyst::Result<()> {
     .with_bundle(FpsCounterBundle::default())?
     .with_bundle(
       RenderingBundle::<DefaultBackend>::new()
-        // The RenderToWindow plugin provides all the scaffolding for opening a window and drawing on it
         .with_plugin(
           RenderToWindow::from_config_path(display_config_path)?.with_clear([0.0, 0.0, 0.0, 1.0]),
         )
-        // RenderFlat2D plugin is used to render entities with a `SpriteRender` component.
         .with_plugin(RenderFlat2D::default())
-        .with_plugin(RenderUi::default()),
+        .with_plugin(RenderUi::default())
+        .with_plugin(RenderTiles2D::<ExampleTile, MortonEncoder>::default()),
     )?;
 
   let assets_dir = app_root.join("assets");

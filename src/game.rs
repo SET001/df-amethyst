@@ -1,13 +1,31 @@
 use amethyst::{
-  core::Time,
+  assets::{AssetStorage, Loader},
+  core::{
+    math::{Point3, Vector3},
+    Time, Transform,
+  },
   ecs::prelude::Entity,
   prelude::*,
+  renderer::{
+    formats::texture::ImageFormat,
+    sprite::{SpriteSheet, SpriteSheetFormat, SpriteSheetHandle},
+    Texture,
+  },
+  tiles::{MortonEncoder, RenderTiles2D, Tile, TileMap},
   ui::{UiCreator, UiFinder, UiText},
   utils::fps_counter::FpsCounter,
 };
 
 use crate::menu::MenuState;
 use amethyst::input::{is_key_down, VirtualKeyCode};
+
+#[derive(Default, Clone)]
+pub struct ExampleTile;
+impl Tile for ExampleTile {
+  fn sprite(&self, _: Point3<u32>, _: &World) -> Option<usize> {
+    Some(2)
+  }
+}
 
 #[derive(Default)]
 pub struct GameState {
@@ -36,6 +54,22 @@ impl SimpleState for GameState {
         .world
         .exec(|mut creator: UiCreator<'_>| creator.create("ui/game.ron", ())),
     );
+
+    let map_sprite_sheet_handle =
+      load_sprite_sheet(data.world, "texture/icy.png", "texture/icy.ron");
+
+    let map = TileMap::<ExampleTile, MortonEncoder>::new(
+      Vector3::new(10, 2, 1),
+      Vector3::new(128, 128, 1),
+      Some(map_sprite_sheet_handle),
+    );
+
+    let _map_entity = data
+      .world
+      .create_entity()
+      .with(map)
+      .with(Transform::from(Vector3::new(0.0, 0.0, 0.1)))
+      .build();
   }
 
   fn on_stop(&mut self, data: StateData<GameData>) {
@@ -67,4 +101,20 @@ impl SimpleState for GameState {
     }
     Trans::None
   }
+}
+
+fn load_sprite_sheet(world: &mut World, png_path: &str, ron_path: &str) -> SpriteSheetHandle {
+  let texture_handle = {
+    let loader = world.read_resource::<Loader>();
+    let texture_storage = world.read_resource::<AssetStorage<Texture>>();
+    loader.load(png_path, ImageFormat::default(), (), &texture_storage)
+  };
+  let loader = world.read_resource::<Loader>();
+  let sprite_sheet_store = world.read_resource::<AssetStorage<SpriteSheet>>();
+  loader.load(
+    ron_path,
+    SpriteSheetFormat(texture_handle),
+    (),
+    &sprite_sheet_store,
+  )
 }

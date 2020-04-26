@@ -2,6 +2,7 @@ use amethyst::core::transform::Transform;
 use amethyst::window::ScreenDimensions;
 use amethyst::{
   assets::Handle,
+  core::math::Vector3,
   ecs::prelude::Entity,
   prelude::*,
   renderer::{
@@ -87,15 +88,8 @@ impl SimpleState for MenuState {
 
 fn init_camera(world: &mut World, dimensions: &ScreenDimensions) {
   let mut transform = Transform::default();
-  transform.set_translation_xyz(dimensions.width() * 0.5, dimensions.height() * 0.5, 10.0);
-  let camera = Camera::from(Projection::orthographic(
-    -dimensions.width() / 2.,
-    dimensions.width() / 2.,
-    -dimensions.height() / 2.,
-    dimensions.height() / 2.,
-    0.,
-    200.,
-  ));
+  transform.set_translation_xyz(0.0, 0.0, 10.0);
+  let camera = Camera::standard_2d(dimensions.width(), dimensions.height());
   world.create_entity().with(camera).with(transform).build();
 }
 
