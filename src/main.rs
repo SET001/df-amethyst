@@ -23,6 +23,7 @@ use log::info;
 mod game;
 mod loader;
 mod menu;
+mod system;
 
 use crate::game::ExampleTile;
 use crate::loader::LoadingState;
@@ -49,7 +50,8 @@ fn main() -> amethyst::Result<()> {
         .with_plugin(RenderFlat2D::default())
         .with_plugin(RenderUi::default())
         .with_plugin(RenderTiles2D::<ExampleTile, MortonEncoder>::default()),
-    )?;
+    )?
+    .with(system::MapScrollerSystem, "map_scrolling_system", &[]);
 
   let assets_dir = app_root.join("assets");
   let mut game = Application::build(assets_dir, LoadingState::new())?
