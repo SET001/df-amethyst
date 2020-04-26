@@ -31,15 +31,16 @@ impl SimpleState for MenuState {
 
 fn init_camera(world: &mut World, dimensions: &ScreenDimensions) {
   let mut transform = Transform::default();
-  transform.set_translation_xyz(-dimensions.width() * 0.5, -dimensions.height() * 0.5, 0.1);
-  world
-    .create_entity()
-    .with(Camera::standard_2d(
-      dimensions.width(),
-      -dimensions.height(),
-    ))
-    .with(transform)
-    .build();
+  transform.set_translation_xyz(dimensions.width() * 0.5, dimensions.height() * 0.5, 10.0);
+  let camera = Camera::from(Projection::orthographic(
+    -dimensions.width() / 2.,
+    dimensions.width() / 2.,
+    -dimensions.height() / 2.,
+    dimensions.height() / 2.,
+    0.,
+    200.,
+  ));
+  world.create_entity().with(camera).with(transform).build();
 }
 
 fn initialize_sprite(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
@@ -47,10 +48,8 @@ fn initialize_sprite(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>
     let dim = world.read_resource::<ScreenDimensions>();
     (dim.width(), dim.height())
   };
-  // Move the sprite to the middle of the window
   let mut sprite_transform = Transform::default();
-  // sprite_transform.set_translation_xyz(width / 2., height / 2., 0.);
-  println!("spritesheet {:?}", sprite_sheet_handle);
+  sprite_transform.set_translation_xyz(width / 2., height / 2., 0.);
 
   let sprite_render = SpriteRender {
     sprite_sheet: sprite_sheet_handle,
