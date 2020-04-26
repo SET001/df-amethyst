@@ -1,7 +1,7 @@
 use amethyst::{
   assets::{AssetStorage, Handle, Loader, ProgressCounter},
   prelude::*,
-  renderer::{formats::texture::ImageFormat, Sprite, SpriteSheet, SpriteSheetFormat, Texture},
+  renderer::{formats::texture::ImageFormat, SpriteSheet, SpriteSheetFormat, Texture},
 };
 
 use crate::menu::MenuState;
@@ -10,14 +10,14 @@ pub struct LoadingState {
   //   /// Tracks loaded assets.
   progress_counter: ProgressCounter,
   //   /// Handle to the player texture.
-  pub texture_handle: Option<Handle<Texture>>,
+  pub background_texture_handle: Option<Handle<SpriteSheet>>,
 }
 
 impl LoadingState {
   pub fn new() -> LoadingState {
     LoadingState {
       progress_counter: ProgressCounter::new(),
-      texture_handle: None,
+      background_texture_handle: None,
     }
   }
 }
@@ -33,25 +33,22 @@ impl SimpleState for LoadingState {
       &data.world.read_resource::<AssetStorage<Texture>>(),
     );
 
-    self.texture_handle = Some(texture_handle);
+    let background_texture_handle = loader.load(
+      "logo.ron",
+      SpriteSheetFormat(texture_handle),
+      &mut self.progress_counter,
+      &data.world.read_resource::<AssetStorage<SpriteSheet>>(),
+    );
+
+    self.background_texture_handle = Some(background_texture_handle);
   }
 
   fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
     if self.progress_counter.is_complete() {
-      let texture_handle = self.texture_handle.take().expect(
-        "Expected `texture_handle` to exist when \
-         `progress_counter` is complete.",
-      );
-      let loader = &data.world.read_resource::<Loader>();
-      // let sprite_sheet = self.load_sprite_sheet(texture_handle);
-      // println!("spritesheet {:?}", sprite_sheet);
-
-      let background_texture_handle = loader.load(
-        "logo.ron",
-        SpriteSheetFormat(texture_handle),
-        (),
-        &data.world.read_resource::<AssetStorage<SpriteSheet>>(),
-      );
+      let background_texture_handle = self
+        .background_texture_handle
+        .take()
+        .expect("Expected `background_texture_handle` to be loaded.");
       Trans::Switch(Box::new(MenuState {
         background_texture_handle,
       }))
