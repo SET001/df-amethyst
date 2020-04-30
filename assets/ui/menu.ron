@@ -5,10 +5,7 @@ Container(
     id: "background",
     anchor: Middle,
     stretch: XY( x_margin: 0., y_margin: 0., keep_aspect_ratio: false),
-    width: 20.,
-    height: 20.,
   ),
-  background: SolidColor(0.03, 0.03, 0.03, 1.0),
   children: [
     Image(
       transform: (
@@ -16,13 +13,11 @@ Container(
           y: 70.,
           width: 64.,
           height: 64.,
-          tab_order: 1,
           anchor: BottomMiddle,
-          mouse_reactive: true,
       ),
       image: Texture(File("texture/logo_transparent.png", ("IMAGE", ()))),
     ),
-    Container(
+        Container(
       transform: (
         id: "container_start",
         y: 110,
