@@ -1,10 +1,18 @@
+use crate::menu::MenuState;
 use amethyst::{
   assets::{AssetStorage, Handle, Loader, ProgressCounter},
   prelude::*,
   renderer::{formats::texture::ImageFormat, Texture},
 };
+use enum_map::{enum_map, Enum, EnumMap};
+use serde::Deserialize;
 
-use crate::menu::MenuState;
+#[derive(Debug, Deserialize, Enum)]
+
+enum Assets {
+  SKY,
+  EARTH,
+}
 
 #[derive(Debug)]
 pub struct HandleDesc {
@@ -12,44 +20,44 @@ pub struct HandleDesc {
   handle: Handle<Texture>,
 }
 
+type AssetsMap = EnumMap<Assets, Option<Handle<Texture>>>;
+
 pub struct LoadingState {
+  assets_config: EnumMap<Assets, String>,
   progress_counter: ProgressCounter,
-  pub handles: Vec<HandleDesc>,
+  handles: AssetsMap,
 }
 
 impl LoadingState {
   pub fn new() -> LoadingState {
     LoadingState {
       progress_counter: ProgressCounter::new(),
-      handles: Vec::new(),
+      handles: AssetsMap::new(),
+      assets_config: enum_map! {
+        Assets::SKY => String::from("texture/backgrounds/space6/bright/sky.png"),
+        Assets::EARTH => String::from("texture/backgrounds/space6/bright/earth.png"),
+      },
     }
   }
 
-  pub fn multi_load<T>(&mut self, paths: Vec<&str>, world: &World) -> Vec<HandleDesc> {
+  fn multi_load<T>(&mut self, world: &World) {
     let loader = world.read_resource::<Loader>();
-    paths
-      .iter()
-      .map(|s| HandleDesc {
-        name: s.to_string(),
-        handle: loader.load(
-          s.to_string(),
-          ImageFormat::default(),
-          &mut self.progress_counter,
-          &world.read_resource::<AssetStorage<Texture>>(),
-        ),
-      })
-      .collect()
+    for (k, v) in &self.assets_config {
+      self.handles[k] = Some(loader.load(
+        v,
+        ImageFormat::default(),
+        &mut self.progress_counter,
+        &world.read_resource::<AssetStorage<Texture>>(),
+      ))
+    }
   }
 }
 
 impl SimpleState for LoadingState {
   fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
     println!("loading assets...");
-    let assets = vec![
-      "texture/backgrounds/space6/bright/sky.png",
-      "texture/backgrounds/space6/bright/earth.png",
-    ];
-    self.handles = self.multi_load::<Texture>(assets, &data.world);
+    self.multi_load::<Texture>(&data.world);
+    println!("handles: {:?}", self.handles)
   }
 
   fn update(&mut self, _data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
