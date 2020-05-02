@@ -1,13 +1,13 @@
 use amethyst::core::transform::Transform;
 use amethyst::window::ScreenDimensions;
 use amethyst::{
-  assets::Handle,
+  assets::{AssetStorage, Handle},
   core::math::Vector3,
   ecs::prelude::Entity,
   prelude::*,
   renderer::{
     camera::{Camera, Projection},
-    SpriteRender, SpriteSheet, Transparent,
+    SpriteRender, SpriteSheet, Texture, Transparent,
   },
   ui::{UiCreator, UiEvent, UiEventType, UiFinder, UiText},
 };
@@ -18,6 +18,7 @@ const BUTTON_START: &str = "start";
 const BUTTON_EXIT: &str = "exit";
 
 use crate::game::GameState;
+use crate::loader::{Assets, AssetsMap, LoadingState};
 
 #[derive(Default)]
 pub struct MenuState {
@@ -55,14 +56,10 @@ impl SimpleState for MenuState {
   }
 
   fn on_start(&mut self, mut data: StateData<'_, GameData<'_, '_>>) {
-    println!("menu opened");
-    let dimensions = (*data.world.read_resource::<ScreenDimensions>()).clone();
-    init_camera(data.world, &dimensions);
-    self.ui_root = Some(
-      data
-        .world
-        .exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())),
-    )
+    let world = data.world;
+    init_camera(world);
+    self.ui_root = Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
+    let assets = world.read_resource::<AssetsMap>();
   }
 
   fn on_stop(&mut self, data: StateData<GameData>) {
@@ -86,7 +83,8 @@ impl SimpleState for MenuState {
   }
 }
 
-fn init_camera(world: &mut World, dimensions: &ScreenDimensions) {
+fn init_camera(world: &mut World) {
+  let dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
   let mut transform = Transform::default();
   transform.set_translation_xyz(0.0, 0.0, 10.0);
   let camera = Camera::standard_2d(dimensions.width(), dimensions.height());

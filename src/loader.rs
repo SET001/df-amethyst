@@ -9,7 +9,7 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Enum)]
 
-enum Assets {
+pub enum Assets {
   SKY,
   EARTH,
 }
@@ -20,19 +20,17 @@ pub struct HandleDesc {
   handle: Handle<Texture>,
 }
 
-type AssetsMap = EnumMap<Assets, Option<Handle<Texture>>>;
+pub type AssetsMap = EnumMap<Assets, Option<Handle<Texture>>>;
 
 pub struct LoadingState {
   assets_config: EnumMap<Assets, String>,
   progress_counter: ProgressCounter,
-  handles: AssetsMap,
 }
 
 impl LoadingState {
   pub fn new() -> LoadingState {
     LoadingState {
       progress_counter: ProgressCounter::new(),
-      handles: AssetsMap::new(),
       assets_config: enum_map! {
         Assets::SKY => String::from("texture/backgrounds/space6/bright/sky.png"),
         Assets::EARTH => String::from("texture/backgrounds/space6/bright/earth.png"),
@@ -40,24 +38,26 @@ impl LoadingState {
     }
   }
 
-  fn multi_load<T>(&mut self, world: &World) {
+  fn load<T>(&mut self, world: &World) -> AssetsMap {
     let loader = world.read_resource::<Loader>();
+    let mut handles = AssetsMap::new();
     for (k, v) in &self.assets_config {
-      self.handles[k] = Some(loader.load(
+      handles[k] = Some(loader.load(
         v,
         ImageFormat::default(),
         &mut self.progress_counter,
         &world.read_resource::<AssetStorage<Texture>>(),
       ))
     }
+    return handles;
   }
 }
 
 impl SimpleState for LoadingState {
   fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
     println!("loading assets...");
-    self.multi_load::<Texture>(&data.world);
-    println!("handles: {:?}", self.handles)
+    let handles = self.load::<Texture>(&data.world);
+    data.world.insert(handles);
   }
 
   fn update(&mut self, _data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
