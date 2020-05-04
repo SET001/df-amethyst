@@ -20,6 +20,7 @@ use amethyst::{
 
 use log::info;
 
+mod component;
 mod game;
 mod loader;
 mod menu;

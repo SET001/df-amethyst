@@ -17,6 +17,7 @@ use amethyst::input::{is_key_down, VirtualKeyCode};
 const BUTTON_START: &str = "start";
 const BUTTON_EXIT: &str = "exit";
 
+use crate::component::Scroller;
 use crate::game::GameState;
 use crate::loader::{Assets, AssetsMap, LoadingState};
 
@@ -57,6 +58,7 @@ impl SimpleState for MenuState {
 
   fn on_start(&mut self, mut data: StateData<'_, GameData<'_, '_>>) {
     let mut world = data.world;
+    world.register::<Scroller>();
     init_camera(&mut world);
     self.ui_root = Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
     add_sprite(&mut world, Assets::SKY);
@@ -123,11 +125,13 @@ fn add_sprite(world: &mut World, asset: Assets) {
     sprite_sheet: sprite_sheet_handle,
     sprite_number: 0, // First sprite
   };
+  let scroller = Scroller::default();
   world
     .create_entity()
     .with(sprite_render)
     .with(Transform::default())
     .with(Transparent)
+    .with(scroller)
     .build();
 }
 
