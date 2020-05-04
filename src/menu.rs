@@ -61,9 +61,9 @@ impl SimpleState for MenuState {
     world.register::<Scroller>();
     init_camera(&mut world);
     self.ui_root = Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
-    add_sprite(&mut world, Assets::SKY);
-    add_sprite(&mut world, Assets::EARTH);
-    add_sprite(&mut world, Assets::MOON);
+    add_sky(world);
+    add_moon(world);
+    add_earth(world);
   }
 
   fn on_stop(&mut self, data: StateData<GameData>) {
@@ -85,6 +85,54 @@ impl SimpleState for MenuState {
     }
     Trans::None
   }
+}
+
+fn add_sky(world: &mut World) {
+  let dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
+  let sky = add_sprite(world, Assets::SKY);
+  let scroller = Scroller { speed: 0.2 };
+  let mut transform = Transform::default();
+  let x = dimensions.width() - 1920.0;
+  transform.set_translation_xyz(-x, 0., 0.);
+  world
+    .create_entity()
+    .with(sky.clone())
+    .with(transform)
+    .with(Transparent)
+    .with(scroller.clone())
+    .build();
+
+  let mut transform2 = Transform::default();
+  transform2.set_translation_xyz(-x + 1920.0, 0., 0.);
+  world
+    .create_entity()
+    .with(sky)
+    .with(transform2)
+    .with(Transparent)
+    .with(scroller)
+    .build();
+}
+
+fn add_earth(world: &mut World) {
+  let sky = add_sprite(world, Assets::EARTH);
+  world
+    .create_entity()
+    .with(sky)
+    .with(Transform::default())
+    .with(Transparent)
+    .build();
+}
+
+fn add_moon(world: &mut World) {
+  let sky = add_sprite(world, Assets::MOON);
+  let scroller = Scroller { speed: 0.4 };
+  world
+    .create_entity()
+    .with(sky)
+    .with(Transform::default())
+    .with(Transparent)
+    .with(scroller)
+    .build();
 }
 
 fn init_camera(world: &mut World) {
@@ -109,7 +157,7 @@ fn init_camera(world: &mut World) {
 // .with(sprite_render)
 // .with(sprite_transform)
 
-fn add_sprite(world: &mut World, asset: Assets) {
+fn add_sprite(world: &mut World, asset: Assets) -> SpriteRender {
   let sprite_sheet_handle = {
     let assets = world.read_resource::<AssetsMap>();
     let textureHandle = assets.clone()[asset].clone().unwrap();
@@ -121,18 +169,10 @@ fn add_sprite(world: &mut World, asset: Assets) {
       &world.read_resource::<AssetStorage<SpriteSheet>>(),
     )
   };
-  let sprite_render = SpriteRender {
+  SpriteRender {
     sprite_sheet: sprite_sheet_handle,
     sprite_number: 0, // First sprite
-  };
-  let scroller = Scroller::default();
-  world
-    .create_entity()
-    .with(sprite_render)
-    .with(Transform::default())
-    .with(Transparent)
-    .with(scroller)
-    .build();
+  }
 }
 
 pub fn load_sprite_sheet(texture: Handle<Texture>) -> SpriteSheet {

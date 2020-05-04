@@ -1,8 +1,8 @@
 use amethyst::ecs::{Component, VecStorage};
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct Scroller {
-  speed: i32,
+  pub speed: f32,
 }
 
 impl Component for Scroller {

@@ -12,8 +12,8 @@ impl<'a> System<'a> for MapScrollerSystem {
   type SystemData = (ReadStorage<'a, Scroller>, WriteStorage<'a, Transform>);
 
   fn run(&mut self, (scrollers, mut transforms): Self::SystemData) {
-    for (_, transform) in (&scrollers, &mut transforms).join() {
-      transform.move_left(1.0);
+    for (scroller, transform) in (&scrollers, &mut transforms).join() {
+      transform.move_left(scroller.speed);
     }
   }
 }
