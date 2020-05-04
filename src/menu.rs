@@ -1,13 +1,13 @@
 use amethyst::core::transform::Transform;
 use amethyst::window::ScreenDimensions;
 use amethyst::{
-  assets::{AssetStorage, Handle},
+  assets::{AssetStorage, Handle, Loader},
   core::math::Vector3,
   ecs::prelude::Entity,
   prelude::*,
   renderer::{
     camera::{Camera, Projection},
-    SpriteRender, SpriteSheet, Texture, Transparent,
+    Sprite, SpriteRender, SpriteSheet, Texture, Transparent,
   },
   ui::{UiCreator, UiEvent, UiEventType, UiFinder, UiText},
 };
@@ -56,10 +56,12 @@ impl SimpleState for MenuState {
   }
 
   fn on_start(&mut self, mut data: StateData<'_, GameData<'_, '_>>) {
-    let world = data.world;
-    init_camera(world);
+    let mut world = data.world;
+    init_camera(&mut world);
     self.ui_root = Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
-    let assets = world.read_resource::<AssetsMap>();
+    add_sprite(&mut world, Assets::SKY);
+    add_sprite(&mut world, Assets::EARTH);
+    add_sprite(&mut world, Assets::MOON);
   }
 
   fn on_stop(&mut self, data: StateData<GameData>) {
@@ -91,14 +93,32 @@ fn init_camera(world: &mut World) {
   world.create_entity().with(camera).with(transform).build();
 }
 
-fn initialize_sprite(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>) {
-  let (width, height) = {
-    let dim = world.read_resource::<ScreenDimensions>();
-    (dim.width(), dim.height())
-  };
-  let mut sprite_transform = Transform::default();
-  sprite_transform.set_translation_xyz(width / 2., height / 2., 0.);
+// let (width, height) = {
+//   let dim = world.read_resource::<ScreenDimensions>();
+//   (dim.width(), dim.height())
+// };
+// let mut sprite_transform = Transform::default();
+// sprite_transform.set_translation_xyz(width / 2., height / 2., 0.);
 
+// let sprite_render = SpriteRender {
+//   sprite_sheet: sprite_sheet_handle,
+//   sprite_number: 0, // First sprite
+// };
+// .with(sprite_render)
+// .with(sprite_transform)
+
+fn add_sprite(world: &mut World, asset: Assets) {
+  let sprite_sheet_handle = {
+    let assets = world.read_resource::<AssetsMap>();
+    let textureHandle = assets.clone()[asset].clone().unwrap();
+    let sprite_sheet = load_sprite_sheet(textureHandle);
+    let loader = world.read_resource::<Loader>();
+    loader.load_from_data(
+      sprite_sheet,
+      (),
+      &world.read_resource::<AssetStorage<SpriteSheet>>(),
+    )
+  };
   let sprite_render = SpriteRender {
     sprite_sheet: sprite_sheet_handle,
     sprite_number: 0, // First sprite
@@ -106,7 +126,28 @@ fn initialize_sprite(world: &mut World, sprite_sheet_handle: Handle<SpriteSheet>
   world
     .create_entity()
     .with(sprite_render)
-    .with(sprite_transform)
+    .with(Transform::default())
     .with(Transparent)
     .build();
+}
+
+pub fn load_sprite_sheet(texture: Handle<Texture>) -> SpriteSheet {
+  let sprite_count = 1; // number of sprites
+  let mut sprites = Vec::with_capacity(sprite_count);
+
+  let image_w = 1920;
+  let image_h = 1080;
+  let sprite_w = 1920;
+  let sprite_h = 1080;
+
+  // Here we are loading the 5th sprite on the bottom row.
+  let offset_x = 50; // 5th sprite * 10 pixel sprite width
+  let offset_y = 10; // Second row (1) * 10 pixel sprite height
+  let offsets = [5.0; 2]; // Align the sprite with the middle of the entity.
+
+  let sprite = Sprite::from_pixel_values(
+    image_w, image_h, sprite_w, sprite_h, offset_x, offset_y, offsets, false, false,
+  );
+  sprites.push(sprite);
+  SpriteSheet { texture, sprites }
 }
