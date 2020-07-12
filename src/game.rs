@@ -11,7 +11,12 @@ use amethyst::{
     sprite::{SpriteSheet, SpriteSheetFormat, SpriteSheetHandle},
     Texture,
   },
-  tiles::{MortonEncoder, RenderTiles2D, Tile, TileMap},
+  tiles::{
+    MortonEncoder,
+    // RenderTiles2D,
+    Tile,
+    TileMap,
+  },
   ui::{UiCreator, UiFinder, UiText},
   utils::fps_counter::FpsCounter,
 };
