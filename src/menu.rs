@@ -88,7 +88,7 @@ impl SimpleState for MenuState {
 
 fn add_planet_scroller(world: &mut World) {
   let screen_dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
-  let scroller = Scroller::new(vec![add_sprite(world, Assets::MOON)], 1.);
+  let scroller = Scroller::new(vec![add_sprite(world, Assets::MOON_SMALL)], -0.1);
   let dimensions = Dimensions {
     width: screen_dimensions.width(),
     height: screen_dimensions.height(),
@@ -190,8 +190,9 @@ fn init_camera(world: &mut World) {
 fn add_sprite(world: &mut World, asset: Assets) -> SpriteRender {
   let sprite_sheet_handle = {
     let assets = world.read_resource::<AssetsMap>();
-    let textureHandle = assets.clone()[asset].clone().unwrap();
-    let sprite_sheet = load_sprite_sheet(textureHandle);
+    let asset = assets.clone()[asset].clone();
+    let textureHandle = asset.0.unwrap();
+    let sprite_sheet = load_sprite_sheet(textureHandle, asset.1, asset.2);
     let loader = world.read_resource::<Loader>();
     loader.load_from_data(
       sprite_sheet,
@@ -205,14 +206,9 @@ fn add_sprite(world: &mut World, asset: Assets) -> SpriteRender {
   }
 }
 
-pub fn load_sprite_sheet(texture: Handle<Texture>) -> SpriteSheet {
+pub fn load_sprite_sheet(texture: Handle<Texture>, width: u32, height: u32) -> SpriteSheet {
   let sprite_count = 1; // number of sprites
   let mut sprites = Vec::with_capacity(sprite_count);
-
-  let image_w = 1920;
-  let image_h = 1080;
-  let sprite_w = 1920;
-  let sprite_h = 1080;
 
   // Here we are loading the 5th sprite on the bottom row.
   let offset_x = 0; // 5th sprite * 10 pixel sprite width
@@ -220,7 +216,7 @@ pub fn load_sprite_sheet(texture: Handle<Texture>) -> SpriteSheet {
   let offsets = [0.0; 2]; // Align the sprite with the middle of the entity.
 
   let sprite = Sprite::from_pixel_values(
-    image_w, image_h, sprite_w, sprite_h, offset_x, offset_y, offsets, false, false,
+    width, height, width, height, offset_x, offset_y, offsets, false, false,
   );
   sprites.push(sprite);
   SpriteSheet { texture, sprites }

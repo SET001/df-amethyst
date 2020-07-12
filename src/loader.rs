@@ -13,6 +13,7 @@ pub enum Assets {
   SKY,
   EARTH,
   MOON,
+  MOON_SMALL,
 }
 
 #[derive(Debug)]
@@ -21,10 +22,10 @@ pub struct HandleDesc {
   handle: Handle<Texture>,
 }
 
-pub type AssetsMap = EnumMap<Assets, Option<Handle<Texture>>>;
+pub type AssetsMap = EnumMap<Assets, (Option<Handle<Texture>>, u32, u32)>;
 
 pub struct LoadingState<'a> {
-  assets_config: EnumMap<Assets, &'a str>,
+  assets_config: EnumMap<Assets, (&'a str, u32, u32)>,
   progress_counter: ProgressCounter,
 }
 
@@ -33,9 +34,10 @@ impl<'a> LoadingState<'a> {
     LoadingState {
       progress_counter: ProgressCounter::new(),
       assets_config: enum_map! {
-        Assets::SKY => "texture/backgrounds/space6/bright/sky.png",
-        Assets::EARTH => "texture/backgrounds/space6/bright/earth.png",
-        Assets::MOON => "texture/backgrounds/space6/bright/moon.png",
+        Assets::SKY => ("texture/backgrounds/space6/bright/sky.png", 1920, 1080),
+        Assets::EARTH => ("texture/backgrounds/space6/bright/earth.png", 1920, 1080),
+        Assets::MOON => ("texture/backgrounds/space6/bright/moon.png", 1920, 1080),
+        Assets::MOON_SMALL => ("texture/backgrounds/space6/bright/moon_small.png", 232, 232),
       },
     }
   }
@@ -44,12 +46,16 @@ impl<'a> LoadingState<'a> {
     let loader = world.read_resource::<Loader>();
     let mut handles = AssetsMap::new();
     for (k, v) in &self.assets_config {
-      handles[k] = Some(loader.load(
-        v.to_string(),
-        ImageFormat::default(),
-        &mut self.progress_counter,
-        &world.read_resource::<AssetStorage<Texture>>(),
-      ))
+      handles[k] = (
+        Some(loader.load(
+          v.0.to_string(),
+          ImageFormat::default(),
+          &mut self.progress_counter,
+          &world.read_resource::<AssetStorage<Texture>>(),
+        )),
+        v.1,
+        v.2,
+      )
     }
     return handles;
   }

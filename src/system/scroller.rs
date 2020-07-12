@@ -37,7 +37,7 @@ impl<'a> System<'a> for ScrollerSystem {
         updater.insert(
           newItem,
           Velocity {
-            x: -1.0,
+            x: scroller.speed,
             y: 0.0,
             z: 0.0,
           },
