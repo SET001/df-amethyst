@@ -17,7 +17,7 @@ use amethyst::input::{is_key_down, VirtualKeyCode};
 const BUTTON_START: &str = "start";
 const BUTTON_EXIT: &str = "exit";
 
-use crate::component::Scroller;
+use crate::component::{Dimensions, Position, Scroller};
 use crate::game::GameState;
 use crate::loader::{Assets, AssetsMap, LoadingState};
 
@@ -56,13 +56,16 @@ impl SimpleState for MenuState {
     }
   }
 
-  fn on_start(&mut self, mut data: StateData<'_, GameData<'_, '_>>) {
+  fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
     let mut world = data.world;
     world.register::<Scroller>();
+    world.register::<Dimensions>();
+    world.register::<Position>();
     init_camera(&mut world);
     self.ui_root = Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
-    add_sky(world);
-    add_moon(world);
+    add_planet_scroller(world);
+    // add_sky_scroller(world);
+    // add_moon(world);
     add_earth(world);
   }
 
@@ -87,37 +90,64 @@ impl SimpleState for MenuState {
   }
 }
 
-fn add_sky(world: &mut World) {
-  let dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
-  let sky = add_sprite(world, Assets::SKY);
-  let scroller = Scroller { speed: 0.2 };
-  let mut transform = Transform::default();
-  let x = dimensions.width() - 1920.0;
-  transform.set_translation_xyz(-x, 0., 0.);
-  world
-    .create_entity()
-    .with(sky.clone())
-    .with(transform)
-    .with(Transparent)
-    .with(scroller.clone())
-    .build();
+fn add_planet_scroller(world: &mut World) {
+  let screen_dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
+  let scroller = Scroller::new(vec![add_sprite(world, Assets::MOON)], 1.);
+  let dimensions = Dimensions {
+    width: screen_dimensions.width(),
+    height: screen_dimensions.height(),
+  };
 
-  let mut transform2 = Transform::default();
-  transform2.set_translation_xyz(-x + 1920.0, 0., 0.);
+  let position = Position::default();
   world
     .create_entity()
-    .with(sky)
-    .with(transform2)
-    .with(Transparent)
+    .with(dimensions)
+    .with(position)
     .with(scroller)
     .build();
 }
 
-fn add_earth(world: &mut World) {
-  let sky = add_sprite(world, Assets::EARTH);
+fn add_sky_scroller(world: &mut World) {
+  let screen_dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
+  let scroller = Scroller::new(vec![add_sprite(world, Assets::SKY)], 1.);
+  let dimensions = Dimensions {
+    width: screen_dimensions.width(),
+    height: screen_dimensions.height(),
+  };
+
+  let position = Position::default();
   world
     .create_entity()
-    .with(sky)
+    .with(dimensions)
+    .with(position)
+    .with(scroller)
+    .build();
+
+  // let dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
+  // let sky = add_sprite(world, Assets::SKY);
+  // let scroller = Scroller {
+  //   speed: 0.0,
+  //   // tileWidth: 1920.0,
+  //   tiles: vec![sky],
+  // };
+
+  // // let mut transform = Transform::default();
+  // // let x = dimensions.width() - 1920.0;
+  // // transform.set_translation_xyz(-x / 2.0, 0., 0.);
+  // world
+  //   .create_entity()
+  //   // .with(sky.clone())
+  //   // .with(transform)
+  //   // .with(Transparent)
+  //   .with(scroller.clone())
+  //   .build();
+}
+
+fn add_earth(world: &mut World) {
+  let earth = add_sprite(world, Assets::EARTH);
+  world
+    .create_entity()
+    .with(earth)
     .with(Transform::default())
     .with(Transparent)
     .build();
@@ -125,20 +155,24 @@ fn add_earth(world: &mut World) {
 
 fn add_moon(world: &mut World) {
   let sky = add_sprite(world, Assets::MOON);
-  let scroller = Scroller { speed: 0.4 };
-  world
-    .create_entity()
-    .with(sky)
-    .with(Transform::default())
-    .with(Transparent)
-    .with(scroller)
-    .build();
+  // let scroller = Scroller {
+  //   speed: 0.4,
+  //   // tileWidth: 1920.0,
+  //   tiles: vec![],
+  // };
+  // world
+  //   .create_entity()
+  //   .with(sky)
+  //   .with(Transform::default())
+  //   .with(Transparent)
+  //   .with(scroller)
+  //   .build();
 }
 
 fn init_camera(world: &mut World) {
   let dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
   let mut transform = Transform::default();
-  transform.set_translation_xyz(0.0, 0.0, 10.0);
+  transform.set_translation_xyz(0.0, 0.0, 1000.0);
   let camera = Camera::standard_2d(dimensions.width(), dimensions.height());
   world.create_entity().with(camera).with(transform).build();
 }
@@ -185,9 +219,9 @@ pub fn load_sprite_sheet(texture: Handle<Texture>) -> SpriteSheet {
   let sprite_h = 1080;
 
   // Here we are loading the 5th sprite on the bottom row.
-  let offset_x = 50; // 5th sprite * 10 pixel sprite width
-  let offset_y = 10; // Second row (1) * 10 pixel sprite height
-  let offsets = [5.0; 2]; // Align the sprite with the middle of the entity.
+  let offset_x = 0; // 5th sprite * 10 pixel sprite width
+  let offset_y = 0; // Second row (1) * 10 pixel sprite height
+  let offsets = [0.0; 2]; // Align the sprite with the middle of the entity.
 
   let sprite = Sprite::from_pixel_values(
     image_w, image_h, sprite_w, sprite_h, offset_x, offset_y, offsets, false, false,

@@ -1,3 +1,5 @@
+#![allow(non_snake_case)]
+
 use amethyst::{
   assets::PrefabLoaderSystemDesc,
   core::{frame_limiter::FrameRateLimitStrategy, transform::TransformBundle},
@@ -11,14 +13,10 @@ use amethyst::{
   },
   tiles::{MortonEncoder, RenderTiles2D},
   ui::{RenderUi, UiBundle},
-  utils::{
-    application_root_dir,
-    fps_counter::{FpsCounter, FpsCounterBundle},
-    scene::BasicScenePrefab,
-  },
+  utils::{application_root_dir, fps_counter::FpsCounterBundle, scene::BasicScenePrefab},
 };
 
-use log::info;
+// use log::info;
 
 mod component;
 mod game;
@@ -52,7 +50,8 @@ fn main() -> amethyst::Result<()> {
         .with_plugin(RenderUi::default())
         .with_plugin(RenderTiles2D::<ExampleTile, MortonEncoder>::default()),
     )?
-    .with(system::MapScrollerSystem, "map_scrolling_system", &[]);
+    .with(system::ScrollerSystem, "map_scrolling_system", &[])
+    .with(system::VelocitySystem, "velocity_system", &[]);
 
   let assets_dir = app_root.join("assets");
   let mut game = Application::build(assets_dir, LoadingState::new())?
