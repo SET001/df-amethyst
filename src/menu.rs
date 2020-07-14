@@ -2,7 +2,6 @@ use amethyst::core::transform::Transform;
 use amethyst::window::ScreenDimensions;
 use amethyst::{
   assets::{AssetStorage, Handle, Loader},
-  // core::math::Vector3,
   ecs::prelude::Entity,
   prelude::*,
   renderer::{camera::Camera, Sprite, SpriteRender, SpriteSheet, Texture, Transparent},
@@ -91,19 +90,21 @@ impl SimpleState for MenuState {
 }
 
 fn add_planet_scroller(world: &mut World) {
+  let mut rng = rand::thread_rng();
   let screen_dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
-  let scroller = RangedScroller::new(vec![add_sprite(world, Assets::MOON_SMALL)], -0.5);
+  let distance = rng.gen_range(50, 100) as f32 / 100.0;
+  let scroller = RangedScroller::new(vec![add_sprite(world, Assets::MOON_SMALL)], distance);
   let dimensions = Dimensions {
     width: screen_dimensions.width(),
     height: screen_dimensions.height(),
   };
   let mut transform = Transform::default();
-  let mut rng = rand::thread_rng();
   transform.set_translation_xyz(
     0.0,
     rng.gen_range(0, screen_dimensions.height() as i32) as f32,
     0.0,
   );
+
   world
     .create_entity()
     .with(dimensions)
@@ -114,7 +115,7 @@ fn add_planet_scroller(world: &mut World) {
 
 fn add_sky_scroller(world: &mut World) {
   let screen_dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
-  let scroller = Scroller::new(vec![(add_sprite(world, Assets::SKY))], -0.2);
+  let scroller = Scroller::new(vec![(add_sprite(world, Assets::SKY))], 0.2);
   let dimensions = Dimensions {
     width: screen_dimensions.width(),
     height: screen_dimensions.height(),

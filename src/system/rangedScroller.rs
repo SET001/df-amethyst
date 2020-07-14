@@ -1,5 +1,5 @@
 use amethyst::{
-  core::Transform,
+  core::{math::Vector3, Transform},
   ecs::{Entities, Entity, Join, LazyUpdate, Read, ReadStorage, System, WriteStorage},
 };
 
@@ -33,11 +33,9 @@ impl<'a> System<'a> for RangedScrollerSystem {
     let items = (&entities, &scrollerItems, &dimensions, &transforms)
       .join()
       .collect::<Vec<_>>();
-    let mut scrollersCount = 0;
     for (entity, scroller, dimension, transform) in
       (&entities, &mut scrollers, &dimensions, &transforms).join()
     {
-      scrollersCount += 1;
       let itemWidth = scroller.tiles[0].1 as f32;
       let scrollerItems: Vec<(Entity, &ScrollerItem, &Dimensions, &Transform)> = items
         .iter()
@@ -67,6 +65,10 @@ impl<'a> System<'a> for RangedScrollerSystem {
           transform.translation().y - scroller.tiles[0].2 as f32 / 2.0,
           0.0,
         );
+        // let scale: f32 = rng.gen_range(30, 100) as f32 / 100.0;
+        let scale = 0.5 * scroller.distance;
+        println!("scale is {}", 0.3 * scroller.distance);
+        itemTransform.set_scale(Vector3::new(scale, scale, scale));
 
         updater.insert(newItem, scroller.tiles[0].0.clone());
         updater.insert(newItem, itemTransform);
@@ -75,13 +77,12 @@ impl<'a> System<'a> for RangedScrollerSystem {
         updater.insert(
           newItem,
           Velocity {
-            x: scroller.speed,
+            x: -1.0 * scroller.distance,
             y: 0.0,
             z: 0.0,
           },
         );
       }
     }
-    println!("RangedScrollers : {}", scrollersCount);
   }
 }

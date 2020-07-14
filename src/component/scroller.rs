@@ -9,17 +9,17 @@ use amethyst::{
 
 #[derive(Default, Clone)]
 pub struct Scroller {
-  pub speed: f32,
+  pub distance: f32,
   pub tiles: Vec<(SpriteRender, u32, u32)>,
   pub uuid: String,
   pub items: Vec<Entity>,
 }
 
 impl Scroller {
-  pub fn new(tiles: Vec<(SpriteRender, u32, u32)>, speed: f32) -> Scroller {
+  pub fn new(tiles: Vec<(SpriteRender, u32, u32)>, distance: f32) -> Scroller {
     Scroller {
       tiles,
-      speed,
+      distance,
       uuid: Uuid::new_v4().to_string(),
       items: vec![],
     }
@@ -33,17 +33,17 @@ impl Component for Scroller {
 
 #[derive(Default, Clone)]
 pub struct RangedScroller {
-  pub speed: f32,
+  pub distance: f32,
   pub tiles: Vec<(SpriteRender, u32, u32)>,
   pub uuid: String,
   pub items: Vec<Entity>,
 }
 
 impl RangedScroller {
-  pub fn new(tiles: Vec<(SpriteRender, u32, u32)>, speed: f32) -> RangedScroller {
+  pub fn new(tiles: Vec<(SpriteRender, u32, u32)>, distance: f32) -> RangedScroller {
     RangedScroller {
       tiles,
-      speed,
+      distance,
       uuid: Uuid::new_v4().to_string(),
       items: vec![],
     }

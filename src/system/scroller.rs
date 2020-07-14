@@ -25,7 +25,6 @@ impl<'a> System<'a> for ScrollerSystem {
       (&entities, &scrollerItems, &dimensions, &transforms).join()
     {
       if itemTransform.translation().x < itemDimensions.width / 2.0 * -1.0 {
-        println!("removing bustard!!");
         updater.remove::<ScrollerItem>(entity);
       }
     }
@@ -67,7 +66,7 @@ impl<'a> System<'a> for ScrollerSystem {
         updater.insert(
           newItem,
           Velocity {
-            x: scroller.speed,
+            x: -1.0 * scroller.distance,
             y: 0.0,
             z: 0.0,
           },
