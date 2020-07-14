@@ -6,7 +6,12 @@ use amethyst::{
   ecs::prelude::Entity,
   prelude::*,
   renderer::{camera::Camera, Sprite, SpriteRender, SpriteSheet, Texture, Transparent},
-  ui::{UiCreator, UiEvent, UiEventType, UiFinder},
+  ui::{
+    // UiCreator,
+    UiEvent,
+    UiEventType,
+    UiFinder,
+  },
 };
 
 use amethyst::input::{is_key_down, VirtualKeyCode};
