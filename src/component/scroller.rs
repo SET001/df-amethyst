@@ -10,13 +10,13 @@ use amethyst::{
 #[derive(Default, Clone)]
 pub struct Scroller {
   pub speed: f32,
-  pub tiles: Vec<SpriteRender>,
+  pub tiles: Vec<(SpriteRender, u32, u32)>,
   pub uuid: String,
   pub items: Vec<Entity>,
 }
 
 impl Scroller {
-  pub fn new(tiles: Vec<SpriteRender>, speed: f32) -> Scroller {
+  pub fn new(tiles: Vec<(SpriteRender, u32, u32)>, speed: f32) -> Scroller {
     Scroller {
       tiles,
       speed,

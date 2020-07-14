@@ -34,7 +34,9 @@ impl<'a> System<'a> for ScrollerSystem {
       .join()
       .collect::<Vec<_>>();
 
-    for (entity, scroller, dimension) in (&entities, &mut scrollers, &dimensions).join() {
+    for (entity, scroller, dimension, transform) in
+      (&entities, &mut scrollers, &dimensions, &transforms).join()
+    {
       let scrollerItems: Vec<(Entity, &ScrollerItem, &Dimensions, &Transform)> = items
         .iter()
         .filter(|&(_itemEntity, item, _dim, _trans)| &(item.scroller) == &entity)
@@ -50,13 +52,17 @@ impl<'a> System<'a> for ScrollerSystem {
             width: itemWidth,
           },
         );
-        let mut transform = Transform::default();
+        let mut itemTransform = Transform::default();
         let x = (itemsCount as f32) * (itemWidth) + itemWidth / 2.0;
         println!("adding new item on {}", x);
-        transform.set_translation_xyz(x, 0.0, 0.0);
+        itemTransform.set_translation_xyz(
+          x,
+          transform.translation().y - scroller.tiles[0].2 as f32 / 2.0,
+          0.0,
+        );
 
-        updater.insert(newItem, scroller.tiles[0].clone());
-        updater.insert(newItem, transform);
+        updater.insert(newItem, scroller.tiles[0].0.clone());
+        updater.insert(newItem, itemTransform);
         updater.insert(newItem, ScrollerItem { scroller: entity });
 
         updater.insert(

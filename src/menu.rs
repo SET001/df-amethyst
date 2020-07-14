@@ -99,7 +99,8 @@ fn add_planet_scroller(world: &mut World) {
     height: screen_dimensions.height(),
   };
 
-  let transform = Transform::default();
+  let mut transform = Transform::default();
+  transform.set_translation_xyz(0.0, screen_dimensions.height(), 0.0);
   world
     .create_entity()
     .with(dimensions)
@@ -110,13 +111,14 @@ fn add_planet_scroller(world: &mut World) {
 
 fn add_sky_scroller(world: &mut World) {
   let screen_dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
-  let scroller = Scroller::new(vec![add_sprite(world, Assets::SKY)], -0.2);
+  let scroller = Scroller::new(vec![(add_sprite(world, Assets::SKY))], -0.2);
   let dimensions = Dimensions {
     width: screen_dimensions.width(),
     height: screen_dimensions.height(),
   };
 
-  let transform = Transform::default();
+  let mut transform = Transform::default();
+  transform.set_translation_xyz(0.0, screen_dimensions.height(), 0.0);
   world
     .create_entity()
     .with(dimensions)
@@ -148,7 +150,7 @@ fn add_earth(world: &mut World) {
   let earth = add_sprite(world, Assets::EARTH);
   world
     .create_entity()
-    .with(earth)
+    .with(earth.0)
     .with(Transform::default())
     .with(Transparent)
     .build();
@@ -192,12 +194,12 @@ fn init_camera(world: &mut World) {
 // .with(sprite_render)
 // .with(sprite_transform)
 
-fn add_sprite(world: &mut World, asset: Assets) -> SpriteRender {
+fn add_sprite(world: &mut World, asset: Assets) -> (SpriteRender, u32, u32) {
+  let assets = world.read_resource::<AssetsMap>();
+  let masset = assets.clone()[asset].clone();
   let sprite_sheet_handle = {
-    let assets = world.read_resource::<AssetsMap>();
-    let asset = assets.clone()[asset].clone();
-    let textureHandle = asset.0.unwrap();
-    let sprite_sheet = load_sprite_sheet(textureHandle, asset.1, asset.2);
+    let textureHandle = masset.0.unwrap();
+    let sprite_sheet = load_sprite_sheet(textureHandle, masset.1, masset.2);
     let loader = world.read_resource::<Loader>();
     loader.load_from_data(
       sprite_sheet,
@@ -205,10 +207,14 @@ fn add_sprite(world: &mut World, asset: Assets) -> SpriteRender {
       &world.read_resource::<AssetStorage<SpriteSheet>>(),
     )
   };
-  SpriteRender {
-    sprite_sheet: sprite_sheet_handle,
-    sprite_number: 0, // First sprite
-  }
+  (
+    SpriteRender {
+      sprite_sheet: sprite_sheet_handle,
+      sprite_number: 0, // First sprite
+    },
+    masset.1,
+    masset.2,
+  )
 }
 
 pub fn load_sprite_sheet(texture: Handle<Texture>, width: u32, height: u32) -> SpriteSheet {
