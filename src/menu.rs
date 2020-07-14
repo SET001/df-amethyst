@@ -92,7 +92,7 @@ impl SimpleState for MenuState {
 
 fn add_planet_scroller(world: &mut World) {
   let screen_dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
-  let scroller = Scroller::new(vec![add_sprite(world, Assets::MOON_SMALL)], -0.5);
+  let scroller = RangedScroller::new(vec![add_sprite(world, Assets::MOON_SMALL)], -0.5);
   let dimensions = Dimensions {
     width: screen_dimensions.width(),
     height: screen_dimensions.height(),

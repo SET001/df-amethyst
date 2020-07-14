@@ -3,7 +3,8 @@ use amethyst::{
   ecs::{Entities, Entity, Join, LazyUpdate, Read, ReadStorage, System, WriteStorage},
 };
 
-use crate::component::{Dimensions, Scroller, ScrollerItem, Velocity};
+use crate::component::{Dimensions, RangedScroller, ScrollerItem, Velocity};
+use rand::Rng;
 
 pub struct RangedScrollerSystem;
 
@@ -12,7 +13,7 @@ impl<'a> System<'a> for RangedScrollerSystem {
     ReadStorage<'a, ScrollerItem>,
     ReadStorage<'a, Dimensions>,
     ReadStorage<'a, Transform>,
-    WriteStorage<'a, Scroller>,
+    WriteStorage<'a, RangedScroller>,
     Entities<'a>,
     Read<'a, LazyUpdate>,
   );
@@ -21,20 +22,22 @@ impl<'a> System<'a> for RangedScrollerSystem {
     &mut self,
     (scrollerItems, dimensions, transforms, mut scrollers, entities, updater): Self::SystemData,
   ) {
+    let mut rng = rand::thread_rng();
     for (entity, _item, itemDimensions, itemTransform) in
       (&entities, &scrollerItems, &dimensions, &transforms).join()
     {
       if itemTransform.translation().x < itemDimensions.width / 2.0 * -1.0 {
-        println!("removing bustard!!");
         updater.remove::<ScrollerItem>(entity);
       }
     }
     let items = (&entities, &scrollerItems, &dimensions, &transforms)
       .join()
       .collect::<Vec<_>>();
+    let mut scrollersCount = 0;
     for (entity, scroller, dimension, transform) in
       (&entities, &mut scrollers, &dimensions, &transforms).join()
     {
+      scrollersCount += 1;
       let itemWidth = scroller.tiles[0].1 as f32;
       let scrollerItems: Vec<(Entity, &ScrollerItem, &Dimensions, &Transform)> = items
         .iter()
@@ -42,7 +45,13 @@ impl<'a> System<'a> for RangedScrollerSystem {
         .cloned()
         .collect();
       let itemsCount = scrollerItems.len();
-      if itemWidth * (itemsCount as f32 - 1.0) < dimension.width {
+      let mut lastX = 0.0;
+      if itemsCount > 0 {
+        let lastItemEntity = items.last().unwrap().0;
+        lastX = transforms.get(lastItemEntity).unwrap().translation().x
+      }
+      if lastX < dimension.width {
+        println!("ranged scroller add new item {}, {}", lastX, itemsCount);
         let newItem = entities.create();
         updater.insert(
           newItem,
@@ -52,8 +61,7 @@ impl<'a> System<'a> for RangedScrollerSystem {
           },
         );
         let mut itemTransform = Transform::default();
-        let x = (itemsCount as f32) * (itemWidth - 1.0) + itemWidth / 2.0;
-        println!("adding new item on {}", x);
+        let x = lastX + rng.gen_range(300, 1300) as f32;
         itemTransform.set_translation_xyz(
           x,
           transform.translation().y - scroller.tiles[0].2 as f32 / 2.0,
@@ -74,5 +82,6 @@ impl<'a> System<'a> for RangedScrollerSystem {
         );
       }
     }
+    println!("RangedScrollers : {}", scrollersCount);
   }
 }

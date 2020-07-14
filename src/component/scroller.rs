@@ -29,6 +29,7 @@ impl Scroller {
 impl Component for Scroller {
   type Storage = VecStorage<Self>;
 }
+//  =====================
 
 #[derive(Default, Clone)]
 pub struct RangedScroller {
@@ -39,8 +40,8 @@ pub struct RangedScroller {
 }
 
 impl RangedScroller {
-  pub fn new(tiles: Vec<(SpriteRender, u32, u32)>, speed: f32) -> Scroller {
-    Scroller {
+  pub fn new(tiles: Vec<(SpriteRender, u32, u32)>, speed: f32) -> RangedScroller {
+    RangedScroller {
       tiles,
       speed,
       uuid: Uuid::new_v4().to_string(),
@@ -52,6 +53,8 @@ impl RangedScroller {
 impl Component for RangedScroller {
   type Storage = VecStorage<Self>;
 }
+
+//  =====================
 
 #[derive(Clone)]
 pub struct ScrollerItem {
