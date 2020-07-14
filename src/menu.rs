@@ -10,11 +10,12 @@ use amethyst::{
 };
 
 use amethyst::input::{is_key_down, VirtualKeyCode};
+use rand::Rng;
 
 const BUTTON_START: &str = "start";
 const BUTTON_EXIT: &str = "exit";
 
-use crate::component::{Dimensions, Scroller};
+use crate::component::{Dimensions, RangedScroller, Scroller};
 use crate::game::GameState;
 use crate::loader::{Assets, AssetsMap};
 
@@ -61,6 +62,10 @@ impl SimpleState for MenuState {
     self.ui_root = Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
     add_sky_scroller(world);
     add_planet_scroller(world);
+    add_planet_scroller(world);
+    add_planet_scroller(world);
+    add_planet_scroller(world);
+    add_planet_scroller(world);
     add_earth(world);
   }
 
@@ -92,9 +97,13 @@ fn add_planet_scroller(world: &mut World) {
     width: screen_dimensions.width(),
     height: screen_dimensions.height(),
   };
-
   let mut transform = Transform::default();
-  transform.set_translation_xyz(0.0, screen_dimensions.height(), 0.0);
+  let mut rng = rand::thread_rng();
+  transform.set_translation_xyz(
+    0.0,
+    rng.gen_range(0, screen_dimensions.height() as i32) as f32,
+    0.0,
+  );
   world
     .create_entity()
     .with(dimensions)

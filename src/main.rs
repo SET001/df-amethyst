@@ -51,7 +51,8 @@ fn main() -> amethyst::Result<()> {
         .with_plugin(RenderUi::default())
         .with_plugin(RenderTiles2D::<ExampleTile, MortonEncoder>::default()),
     )?
-    .with(system::ScrollerSystem, "map_scrolling_system", &[])
+    .with(system::ScrollerSystem, "scrolling_system", &[])
+    // .with(system::RangedScrollerSystem, "ranged_scrolling_system", &[])
     .with(system::VelocitySystem, "velocity_system", &[]);
 
   let assets_dir = app_root.join("assets");
