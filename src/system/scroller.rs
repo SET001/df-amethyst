@@ -21,7 +21,6 @@ impl<'a> System<'a> for ScrollerSystem {
     &mut self,
     (scrollerItems, dimensions, transforms, mut scrollers, entities, updater): Self::SystemData,
   ) {
-    let itemWidth = 232.0;
     for (entity, _item, itemDimensions, itemTransform) in
       (&entities, &scrollerItems, &dimensions, &transforms).join()
     {
@@ -33,10 +32,10 @@ impl<'a> System<'a> for ScrollerSystem {
     let items = (&entities, &scrollerItems, &dimensions, &transforms)
       .join()
       .collect::<Vec<_>>();
-
     for (entity, scroller, dimension, transform) in
       (&entities, &mut scrollers, &dimensions, &transforms).join()
     {
+      let itemWidth = scroller.tiles[0].1 as f32;
       let scrollerItems: Vec<(Entity, &ScrollerItem, &Dimensions, &Transform)> = items
         .iter()
         .filter(|&(_itemEntity, item, _dim, _trans)| &(item.scroller) == &entity)
@@ -53,7 +52,7 @@ impl<'a> System<'a> for ScrollerSystem {
           },
         );
         let mut itemTransform = Transform::default();
-        let x = (itemsCount as f32) * (itemWidth) + itemWidth / 2.0;
+        let x = (itemsCount as f32) * (itemWidth - 1.0) + itemWidth / 2.0;
         println!("adding new item on {}", x);
         itemTransform.set_translation_xyz(
           x,
