@@ -6,12 +6,7 @@ use amethyst::{
   ecs::prelude::Entity,
   prelude::*,
   renderer::{camera::Camera, Sprite, SpriteRender, SpriteSheet, Texture, Transparent},
-  ui::{
-    // UiCreator,
-    UiEvent,
-    UiEventType,
-    UiFinder,
-  },
+  ui::{UiCreator, UiEvent, UiEventType, UiFinder},
 };
 
 use amethyst::input::{is_key_down, VirtualKeyCode};
@@ -63,10 +58,9 @@ impl SimpleState for MenuState {
     world.register::<Scroller>();
     world.register::<Dimensions>();
     init_camera(&mut world);
-    // self.ui_root = Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
+    self.ui_root = Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
     add_sky_scroller(world);
     add_planet_scroller(world);
-    // add_moon(world);
     add_earth(world);
   }
 
@@ -125,25 +119,6 @@ fn add_sky_scroller(world: &mut World) {
     .with(transform)
     .with(scroller)
     .build();
-
-  //   // let dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
-  //   // let sky = add_sprite(world, Assets::SKY);
-  //   // let scroller = Scroller {
-  //   //   speed: 0.0,
-  //   //   // tileWidth: 1920.0,
-  //   //   tiles: vec![sky],
-  //   // };
-
-  //   // // let mut transform = Transform::default();
-  //   // // let x = dimensions.width() - 1920.0;
-  //   // // transform.set_translation_xyz(-x / 2.0, 0., 0.);
-  //   // world
-  //   //   .create_entity()
-  //   //   // .with(sky.clone())
-  //   //   // .with(transform)
-  //   //   // .with(Transparent)
-  //   //   .with(scroller.clone())
-  //   //   .build();
 }
 
 fn add_earth(world: &mut World) {
@@ -159,22 +134,6 @@ fn add_earth(world: &mut World) {
     .build();
 }
 
-// fn add_moon(world: &mut World) {
-//   let sky = add_sprite(world, Assets::MOON);
-//   // let scroller = Scroller {
-//   //   speed: 0.4,
-//   //   // tileWidth: 1920.0,
-//   //   tiles: vec![],
-//   // };
-//   // world
-//   //   .create_entity()
-//   //   .with(sky)
-//   //   .with(Transform::default())
-//   //   .with(Transparent)
-//   //   .with(scroller)
-//   //   .build();
-// }
-
 fn init_camera(world: &mut World) {
   let dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
   let mut transform = Transform::default();
@@ -187,15 +146,6 @@ fn init_camera(world: &mut World) {
 //   let dim = world.read_resource::<ScreenDimensions>();
 //   (dim.width(), dim.height())
 // };
-// let mut sprite_transform = Transform::default();
-// sprite_transform.set_translation_xyz(width / 2., height / 2., 0.);
-
-// let sprite_render = SpriteRender {
-//   sprite_sheet: sprite_sheet_handle,
-//   sprite_number: 0, // First sprite
-// };
-// .with(sprite_render)
-// .with(sprite_transform)
 
 fn add_sprite(world: &mut World, asset: Assets) -> (SpriteRender, u32, u32) {
   let assets = world.read_resource::<AssetsMap>();
