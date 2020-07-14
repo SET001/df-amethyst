@@ -147,11 +147,14 @@ fn add_sky_scroller(world: &mut World) {
 }
 
 fn add_earth(world: &mut World) {
+  let screen_dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
   let earth = add_sprite(world, Assets::EARTH);
+  let mut transform = Transform::default();
+  transform.set_translation_xyz(screen_dimensions.width() / 2.0, earth.2 as f32 / 2.0, 100.0);
   world
     .create_entity()
     .with(earth.0)
-    .with(Transform::default())
+    .with(transform)
     .with(Transparent)
     .build();
 }
