@@ -1,4 +1,4 @@
-use crate::menu::MenuState;
+use super::menu::MenuState;
 use amethyst::{
   assets::{AssetStorage, Handle, Loader, ProgressCounter},
   prelude::*,

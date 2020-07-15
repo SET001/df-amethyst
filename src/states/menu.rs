@@ -14,9 +14,9 @@ use rand::Rng;
 const BUTTON_START: &str = "start";
 const BUTTON_EXIT: &str = "exit";
 
+use super::game::GameState;
+use super::loader::{Assets, AssetsMap};
 use crate::component::{Dimensions, RangedScroller, Scroller};
-use crate::game::GameState;
-use crate::loader::{Assets, AssetsMap};
 
 #[derive(Default)]
 pub struct MenuState {

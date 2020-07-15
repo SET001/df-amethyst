@@ -21,7 +21,7 @@ use amethyst::{
   utils::fps_counter::FpsCounter,
 };
 
-use crate::menu::MenuState;
+use super::menu::MenuState;
 use amethyst::input::{is_key_down, VirtualKeyCode};
 
 pub const TILEMAP_HEIGHT: u32 = 8;

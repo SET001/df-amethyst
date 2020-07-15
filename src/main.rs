@@ -20,13 +20,10 @@ use amethyst::{
 // use log::info;
 
 mod component;
-mod game;
-mod loader;
-mod menu;
+mod states;
 mod system;
 
-use crate::game::ExampleTile;
-use crate::loader::LoadingState;
+use crate::states::LoadingState;
 
 type MyPrefabData = BasicScenePrefab<(Vec<Position>, Vec<Normal>, Vec<TexCoord>)>;
 
@@ -48,8 +45,7 @@ fn main() -> amethyst::Result<()> {
           RenderToWindow::from_config_path(display_config_path)?.with_clear([0.0, 0.0, 0.0, 1.0]),
         )
         .with_plugin(RenderFlat2D::default())
-        .with_plugin(RenderUi::default())
-        .with_plugin(RenderTiles2D::<ExampleTile, MortonEncoder>::default()),
+        .with_plugin(RenderUi::default()), // .with_plugin(RenderTiles2D::<ExampleTile, MortonEncoder>::default()),
     )?
     .with(system::ScrollerSystem, "scrolling_system", &[])
     .with(system::RangedScrollerSystem, "ranged_scrolling_system", &[])
