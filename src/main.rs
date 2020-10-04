@@ -8,11 +8,11 @@ use amethyst::{
   prelude::*,
   renderer::{
     plugins::{RenderFlat2D, RenderToWindow},
-    rendy::mesh::{Normal, Position, TexCoord},
+    rendy::mesh::{Normal, TexCoord},
     types::DefaultBackend,
     RenderingBundle,
   },
-  tiles::{MortonEncoder, RenderTiles2D},
+  // tiles::{MortonEncoder, RenderTiles2D},
   ui::{RenderUi, UiBundle},
   utils::{application_root_dir, fps_counter::FpsCounterBundle, scene::BasicScenePrefab},
 };
@@ -23,38 +23,39 @@ mod component;
 mod states;
 mod system;
 
-use crate::states::LoadingState;
-
-type MyPrefabData = BasicScenePrefab<(Vec<Position>, Vec<Normal>, Vec<TexCoord>)>;
+use crate::states::CustomPrefabData;
+use crate::states::{LoadingState, PrefabsTest};
 
 fn main() -> amethyst::Result<()> {
   amethyst::start_logger(Default::default());
 
   let app_root = application_root_dir()?;
-  let display_config_path = app_root.join("config").join("display.ron");
+  let assets_dir = app_root.join("assets/");
+  let display_config_path = app_root.join("config/display.ron");
 
   let game_data = GameDataBuilder::default()
-    .with_system_desc(PrefabLoaderSystemDesc::<MyPrefabData>::default(), "", &[])
+    .with_system_desc(
+      PrefabLoaderSystemDesc::<CustomPrefabData>::default(),
+      "scene_loader",
+      &[],
+    )
+    // .with_bundle(AnimationBundle::<AnimationId, SpriteRender>::new(
+    //     "sprite_animation_control",
+    //     "sprite_sampler_interpolation",
+    // ))?
     .with_bundle(TransformBundle::new())?
-    .with_bundle(InputBundle::<StringBindings>::new())?
-    .with_bundle(UiBundle::<StringBindings>::new())?
-    .with_bundle(FpsCounterBundle::default())?
+    .with(system::ScrollerSystem, "scrolling_system", &[])
+    .with(system::VelocitySystem, "velocity_system", &[])
     .with_bundle(
       RenderingBundle::<DefaultBackend>::new()
         .with_plugin(
-          RenderToWindow::from_config_path(display_config_path)?.with_clear([0.0, 0.0, 0.0, 1.0]),
+          RenderToWindow::from_config_path(display_config_path)?
+            .with_clear([0.34, 0.36, 0.52, 1.0]),
         )
-        .with_plugin(RenderFlat2D::default())
-        .with_plugin(RenderUi::default()), // .with_plugin(RenderTiles2D::<ExampleTile, MortonEncoder>::default()),
-    )?
-    .with(system::ScrollerSystem, "scrolling_system", &[])
-    .with(system::RangedScrollerSystem, "ranged_scrolling_system", &[])
-    .with(system::VelocitySystem, "velocity_system", &[]);
+        .with_plugin(RenderFlat2D::default()),
+    )?;
 
-  let assets_dir = app_root.join("assets");
-  let mut game = Application::build(assets_dir, LoadingState::new())?
-    .with_frame_limit(FrameRateLimitStrategy::Unlimited, 9999)
-    .build(game_data)?;
+  let mut game = Application::new(assets_dir, PrefabsTest::default(), game_data)?;
   game.run();
 
   Ok(())

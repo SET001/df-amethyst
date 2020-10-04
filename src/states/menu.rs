@@ -2,7 +2,7 @@ use amethyst::core::transform::Transform;
 use amethyst::window::ScreenDimensions;
 use amethyst::{
   assets::{AssetStorage, Handle, Loader},
-  ecs::prelude::Entity,
+  ecs::Entity,
   prelude::*,
   renderer::{camera::Camera, Sprite, SpriteRender, SpriteSheet, Texture, Transparent},
   ui::{UiCreator, UiEvent, UiEventType, UiFinder},
@@ -13,8 +13,11 @@ use rand::Rng;
 
 const BUTTON_START: &str = "start";
 const BUTTON_EXIT: &str = "exit";
+const BUTTON_TEST: &str = "test";
 
 use super::game::GameState;
+use super::prefabsTest::PrefabsTest;
+
 use super::loader::{Assets, AssetsMap};
 use crate::component::{Dimensions, RangedScroller, Scroller};
 
@@ -23,6 +26,7 @@ pub struct MenuState {
   pub ui_root: Option<Entity>,
   pub button_start: Option<Entity>,
   pub button_exit: Option<Entity>,
+  pub button_test: Option<Entity>,
 }
 
 impl SimpleState for MenuState {
@@ -43,6 +47,10 @@ impl SimpleState for MenuState {
           log::info!("[Trans::Switch] Switching to Game!");
           return Trans::Switch(Box::new(GameState::default()));
         }
+        if Some(target) == self.button_test {
+          log::info!("[Trans::Switch] Switching to test!");
+          return Trans::Switch(Box::new(PrefabsTest::default()));
+        }
         if Some(target) == self.button_exit {
           log::info!("[Trans::Switch] Quiting to Game!");
           return Trans::Quit;
@@ -59,13 +67,13 @@ impl SimpleState for MenuState {
     world.register::<Dimensions>();
     init_camera(&mut world);
     self.ui_root = Some(world.exec(|mut creator: UiCreator<'_>| creator.create("ui/menu.ron", ())));
-    add_sky_scroller(world);
-    add_planet_scroller(world);
-    add_planet_scroller(world);
-    add_planet_scroller(world);
-    add_planet_scroller(world);
-    add_planet_scroller(world);
-    add_earth(world);
+    // add_sky_scroller(world);
+    // add_planet_scroller(world);
+    // add_planet_scroller(world);
+    // add_planet_scroller(world);
+    // add_planet_scroller(world);
+    // add_planet_scroller(world);
+    // add_earth(world);
   }
 
   fn on_stop(&mut self, data: StateData<GameData>) {
@@ -83,6 +91,7 @@ impl SimpleState for MenuState {
       world.exec(|ui_finder: UiFinder<'_>| {
         self.button_start = ui_finder.find(BUTTON_START);
         self.button_exit = ui_finder.find(BUTTON_EXIT);
+        self.button_test = ui_finder.find(BUTTON_TEST);
       });
     }
     Trans::None

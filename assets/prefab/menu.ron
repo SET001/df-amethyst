@@ -1,0 +1,23 @@
+#![enable(implicit_some)]
+Prefab (
+  entities: [
+    PrefabEntity(
+      data: Scroller(
+        position: (0.0, 0.0, 0.0),
+        velocity: (0.0, 0.0, 0.0),
+        texture: Asset(File("textures/monster.png", PngFormat, ())),
+        health: 100,
+        attack: 10,
+      ),
+    ),
+    PrefabEntity(
+      data: RangedScroller(
+        position: (0.0, 0.0, 0.0),
+        velocity: (0.0, 0.0, 0.0),
+        texture: Asset(File("textures/monster.png", PngFormat, ())),
+        health: 100,
+        attack: 10,
+      ),
+    ),
+  ],
+)
