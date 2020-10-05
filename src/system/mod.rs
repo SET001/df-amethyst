@@ -3,8 +3,10 @@
 mod rangedScroller;
 mod scroller;
 mod scrollerTile;
+mod spRandomization;
 mod velocity;
 
-pub use self::rangedScroller::RangedScrollerSystem;
-pub use self::scroller::ScrollerSystem;
-pub use self::velocity::VelocitySystem;
+pub use self::{
+  rangedScroller::RangedScrollerSystem, scroller::ScrollerSystem,
+  spRandomization::SpawnPointRandomizationSystem, velocity::VelocitySystem,
+};

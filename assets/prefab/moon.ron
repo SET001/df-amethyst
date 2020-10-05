@@ -3,6 +3,14 @@ Prefab(
   entities: [
     PrefabEntity(
       data: Moon (
+        velocity: Velocity(
+          x: 0.0,
+          y: 0.0,
+          z: 0.0
+        ),
+        randomizeSpawnPoint: RandomizeSpawnPoint(
+          randomized: false
+        ),
         sprite: (
           sheet: Sheet(
             texture: File(
@@ -30,7 +38,7 @@ Prefab(
                 texture_width: 232,
                 texture_height: 232,
                 sprites: [
-                  (x: 0,   y: 0, width: 232, height: 232),
+                  (x: 0,   y: 0, width: 232, height: 233),
                 ]
               ))
             ],

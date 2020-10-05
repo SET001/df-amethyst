@@ -23,7 +23,7 @@ mod component;
 mod states;
 mod system;
 
-use crate::states::CustomPrefabData;
+use crate::states::Moon;
 use crate::states::{LoadingState, PrefabsTest};
 
 fn main() -> amethyst::Result<()> {
@@ -35,7 +35,7 @@ fn main() -> amethyst::Result<()> {
 
   let game_data = GameDataBuilder::default()
     .with_system_desc(
-      PrefabLoaderSystemDesc::<CustomPrefabData>::default(),
+      PrefabLoaderSystemDesc::<Moon>::default(),
       "scene_loader",
       &[],
     )
@@ -46,6 +46,11 @@ fn main() -> amethyst::Result<()> {
     .with_bundle(TransformBundle::new())?
     .with(system::ScrollerSystem, "scrolling_system", &[])
     .with(system::VelocitySystem, "velocity_system", &[])
+    .with(
+      system::SpawnPointRandomizationSystem,
+      "sp randomization system",
+      &[],
+    )
     .with_bundle(
       RenderingBundle::<DefaultBackend>::new()
         .with_plugin(

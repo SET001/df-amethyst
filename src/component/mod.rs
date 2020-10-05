@@ -1,7 +1,11 @@
 mod dimensions;
 mod scroller;
+mod sprand;
 mod velocity;
 
-pub use self::dimensions::Dimensions;
-pub use self::scroller::{RangedScroller, Scroller, ScrollerItem};
-pub use self::velocity::Velocity;
+pub use self::{
+  dimensions::Dimensions,
+  scroller::{RangedScroller, Scroller, ScrollerItem},
+  sprand::RandomizeSpawnPoint,
+  velocity::Velocity,
+};

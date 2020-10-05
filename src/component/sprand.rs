@@ -6,12 +6,11 @@ use amethyst::{
   Error,
 };
 use serde::{Deserialize, Serialize};
+
 #[derive(Clone, Copy, Debug, Default, Component, Deserialize, Serialize, PrefabData)]
 #[prefab(Component)]
 #[serde(deny_unknown_fields)]
 #[storage(VecStorage)]
-pub struct Velocity {
-  pub x: f32,
-  pub y: f32,
-  pub z: f32,
+pub struct RandomizeSpawnPoint {
+  pub randomized: bool,
 }
