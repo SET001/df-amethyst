@@ -69,7 +69,7 @@ impl SimpleState for GameState {
       world
         .create_entity()
         .with(map)
-        .with(Transform::from(Vector3::new(64.0, -64.0, 0.1)))
+        .with(Transform::from(Vector3::new(0.0, -64.0, 0.1)))
         .build(),
     );
     init_camera(&mut world);
@@ -104,7 +104,8 @@ impl SimpleState for GameState {
 fn init_camera(world: &mut World) {
   let dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
   let mut transform = Transform::default();
-  transform.set_translation_xyz(dimensions.width() / 2.0, dimensions.height() / 2.0, 1000.0);
+  transform.set_translation_xyz(0.0, 0.0, 1.1);
+
   let camera = Camera::standard_2d(dimensions.width(), dimensions.height());
   world.create_entity().with(camera).with(transform).build();
 }
