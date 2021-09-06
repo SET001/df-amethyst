@@ -69,12 +69,7 @@ impl SimpleState for MenuState {
   }
 
   fn on_stop(&mut self, data: StateData<GameData>) {
-    if let Some(root_entity) = self.ui_root {
-      data
-        .world
-        .delete_entity(root_entity)
-        .expect("Failed to remove MainMenu");
-    }
+    data.world.delete_all()
   }
 
   fn update(&mut self, state_data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {

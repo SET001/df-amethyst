@@ -6,6 +6,7 @@ use amethyst::{
   },
   ecs::prelude::Entity,
   prelude::*,
+  renderer::camera::Camera,
   renderer::{
     formats::texture::ImageFormat,
     sprite::{SpriteSheet, SpriteSheetFormat, SpriteSheetHandle},
@@ -19,39 +20,18 @@ use amethyst::{
   },
   ui::{UiCreator, UiFinder, UiText},
   utils::fps_counter::FpsCounter,
+  window::ScreenDimensions,
 };
 
 use super::menu::MenuState;
+use crate::tilemap::{ExampleTile, TILEMAP_HEIGHT, TILEMAP_WIDTH};
 use amethyst::input::{is_key_down, VirtualKeyCode};
-
-pub const TILEMAP_HEIGHT: u32 = 8;
-pub const TILEMAP_WIDTH: u32 = 1000;
-
-#[derive(Default, Clone)]
-pub struct ExampleTile;
-impl Tile for ExampleTile {
-  fn sprite(&self, pos: Point3<u32>, _: &World) -> Option<usize> {
-    if pos[2] == 1 {
-      let x = pos[1];
-      const LAST_LINE: u32 = TILEMAP_HEIGHT - 1;
-      const PRE_LAST_LINE: u32 = TILEMAP_HEIGHT - 2;
-      match x {
-        0 => return Some(2),
-        1 => return Some(0),
-        2 => return Some(1),
-        LAST_LINE => return Some(3),
-        PRE_LAST_LINE => return Some(4),
-        _ => return Some(5),
-      }
-    }
-    return Some(5);
-  }
-}
 
 #[derive(Default)]
 pub struct GameState {
   pub ui_root: Option<Entity>,
   pub fps_display: Option<Entity>,
+  pub map_entity: Option<Entity>,
 }
 
 impl SimpleState for GameState {
@@ -84,22 +64,19 @@ impl SimpleState for GameState {
       Vector3::new(128, 128, 1),
       Some(map_sprite_sheet_handle),
     );
-
-    let _map_entity = data
-      .world
-      .create_entity()
-      .with(map)
-      .with(Transform::from(Vector3::new(64.0, -64.0, 0.1)))
-      .build();
+    let mut world = data.world;
+    self.map_entity = Some(
+      world
+        .create_entity()
+        .with(map)
+        .with(Transform::from(Vector3::new(64.0, -64.0, 0.1)))
+        .build(),
+    );
+    init_camera(&mut world);
   }
 
   fn on_stop(&mut self, data: StateData<GameData>) {
-    if let Some(root_entity) = self.ui_root {
-      data
-        .world
-        .delete_entity(root_entity)
-        .expect("Failed to remove GameState");
-    }
+    data.world.delete_all()
   }
 
   fn update(&mut self, state_data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
@@ -124,6 +101,13 @@ impl SimpleState for GameState {
   }
 }
 
+fn init_camera(world: &mut World) {
+  let dimensions = (*world.read_resource::<ScreenDimensions>()).clone();
+  let mut transform = Transform::default();
+  transform.set_translation_xyz(dimensions.width() / 2.0, dimensions.height() / 2.0, 1000.0);
+  let camera = Camera::standard_2d(dimensions.width(), dimensions.height());
+  world.create_entity().with(camera).with(transform).build();
+}
 fn load_sprite_sheet(world: &mut World, png_path: &str, ron_path: &str) -> SpriteSheetHandle {
   let texture_handle = {
     let loader = world.read_resource::<Loader>();

@@ -1,4 +1,4 @@
-use super::menu::MenuState;
+use super::game::GameState;
 use amethyst::{
   assets::{AssetStorage, Handle, Loader, ProgressCounter},
   prelude::*,
@@ -71,7 +71,7 @@ impl SimpleState for LoadingState<'_> {
   fn update(&mut self, _data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
     if self.progress_counter.is_complete() {
       println!("assets loading complete...");
-      Trans::Switch(Box::new(MenuState::default()))
+      Trans::Switch(Box::new(GameState::default()))
     } else {
       Trans::None
     }
