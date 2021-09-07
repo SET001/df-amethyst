@@ -24,6 +24,7 @@ use amethyst::{
 };
 
 use super::menu::MenuState;
+use crate::component::Velocity;
 use crate::tilemap::{ExampleTile, TILEMAP_HEIGHT, TILEMAP_WIDTH};
 use amethyst::input::{is_key_down, VirtualKeyCode};
 
@@ -70,6 +71,11 @@ impl SimpleState for GameState {
         .create_entity()
         .with(map)
         .with(Transform::from(Vector3::new(0.0, -64.0, 0.0)))
+        .with(Velocity {
+          x: -1.0,
+          y: 0.0,
+          z: 0.0,
+        })
         .build(),
     );
     init_camera(&mut world);
@@ -108,6 +114,7 @@ fn init_camera(world: &mut World) {
   let camera = Camera::standard_2d(dimensions.width(), dimensions.height());
   world.create_entity().with(camera).with(transform).build();
 }
+
 fn load_sprite_sheet(world: &mut World, png_path: &str, ron_path: &str) -> SpriteSheetHandle {
   let texture_handle = {
     let loader = world.read_resource::<Loader>();
