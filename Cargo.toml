@@ -6,7 +6,7 @@ edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
-amethyst = { version = "0.15", features = ["vulkan", "tiles"] }
+amethyst = { version = "0.15.3", features = ["vulkan", "tiles"] }
 serde = { version = "1.0.104", features = ["derive"] }
 log = { version = "0.4.8", features = ["serde"] }
 enum-map = { version = "0.6.2", features = ["serde"]}
