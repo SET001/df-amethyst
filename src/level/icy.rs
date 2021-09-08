@@ -86,17 +86,25 @@ mod test {
   }
   #[test]
   fn test_gen_upper_coast() {
-    let mut level = IcyLevel::new(3, 2);
+    let mut level = IcyLevel::new(4, 3);
     level.gen_upper_coast();
-    assert_eq!(level.map.len(), 6);
-
-    assert_eq!(level.map[0], UPPER_COAST_TILE);
-    assert_eq!(level.map[1], UPPER_COAST_TILE);
-    assert_eq!(level.map[2], UPPER_COAST_TILE);
-
-    assert_eq!(level.map[3], DEFAULT_TILE);
-    assert_eq!(level.map[4], DEFAULT_TILE);
-    assert_eq!(level.map[5], DEFAULT_TILE);
+    assert_eq!(
+      level.map,
+      [
+        UPPER_COAST_TILE,
+        UPPER_COAST_TILE,
+        UPPER_COAST_TILE,
+        UPPER_COAST_TILE,
+        ICE_WALL_TILE,
+        ICE_WALL_TILE,
+        ICE_WALL_TILE,
+        ICE_WALL_TILE,
+        ICE_WALL_AGE_TILE,
+        ICE_WALL_AGE_TILE,
+        ICE_WALL_AGE_TILE,
+        ICE_WALL_AGE_TILE
+      ]
+    );
   }
 
   #[test]
@@ -106,19 +114,24 @@ mod test {
   #[test]
   #[ignore]
   fn test_gen_bottom_coast() {
-    // let map_width: usize = 2;
-    // let map = vec![DEFAULT_TILE; map_width * 2];
-    // let map_with_coasts = gen_upper_coast(map, map_width);
-    // assert_eq!(map_with_coasts[0], DEFAULT_TILE);
-    // assert_eq!(map_with_coasts[1], DEFAULT_TILE);
-    // assert_eq!(map_with_coasts[2], BOTTOM_COAST_TILE);
+    let mut level = IcyLevel::new(4, 3);
+    level.gen_bottom_coast();
+    assert_eq!(
+      level.map,
+      [
+        DEFAULT_TILE,
+        DEFAULT_TILE,
+        DEFAULT_TILE,
+        DEFAULT_TILE,
+        BOTTOM_COAST_AGE_TILE,
+        BOTTOM_COAST_AGE_TILE,
+        BOTTOM_COAST_AGE_TILE,
+        BOTTOM_COAST_AGE_TILE,
+        BOTTOM_COAST_TILE,
+        BOTTOM_COAST_TILE,
+        BOTTOM_COAST_TILE,
+        BOTTOM_COAST_TILE,
+      ]
+    );
   }
-  // #[test]
-  // #[ignore]
-  // fn test_gen_upper_coast() {
-  //   // let map_width: usize = 2;
-  //   // let map = vec![DEFAULT_TILE; map_width * 2];
-  //   // let map_with_coasts = gen_upper_coast(map, map_width);
-  //   // println!("{:?}", map_with_coasts);
-  // }
 }

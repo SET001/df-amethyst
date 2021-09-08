@@ -6,7 +6,7 @@ use amethyst::{
 use rand::Rng;
 
 pub const TILEMAP_HEIGHT: u32 = 8;
-pub const TILEMAP_WIDTH: u32 = 1000;
+pub const TILEMAP_WIDTH: u32 = 300;
 
 #[derive(Default, Clone)]
 pub struct ExampleTile;
