@@ -25,6 +25,7 @@ use amethyst::{
 
 use super::menu::MenuState;
 use crate::component::Velocity;
+use crate::level::{IcyLevel, Level};
 use crate::tilemap::{ExampleTile, LevelTileMap, TILEMAP_HEIGHT, TILEMAP_WIDTH};
 use amethyst::input::{is_key_down, VirtualKeyCode};
 
@@ -72,15 +73,16 @@ impl SimpleState for GameState {
         .with(map)
         .with(Transform::from(Vector3::new(0.0, -64.0, 0.0)))
         .with(Velocity {
-          x: -0.5,
+          x: -1.0,
           y: 0.0,
           z: 0.0,
         })
         .build(),
     );
-    world.insert(LevelTileMap {
-      items: vec![5; 1000],
-    });
+    let mut level = IcyLevel::new(TILEMAP_WIDTH as usize, TILEMAP_HEIGHT as usize);
+    level.gen_map();
+    println!("{:?}", level.map);
+    world.insert(LevelTileMap { items: level.map });
     init_camera(&mut world);
   }
 

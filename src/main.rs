@@ -20,6 +20,7 @@ use amethyst::{
 // use log::info;
 
 mod component;
+mod level;
 mod states;
 mod system;
 mod tilemap;
