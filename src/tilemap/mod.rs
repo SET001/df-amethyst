@@ -1,3 +1,3 @@
 mod tilemap;
 
-pub use self::tilemap::{ExampleTile, LevelTileMap, TILEMAP_HEIGHT, TILEMAP_WIDTH};
+pub use self::tilemap::{ExampleTile, TILEMAP_HEIGHT, TILEMAP_WIDTH};

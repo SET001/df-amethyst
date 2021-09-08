@@ -25,8 +25,8 @@ use amethyst::{
 
 use super::menu::MenuState;
 use crate::component::Velocity;
-use crate::level::{IcyLevel, Level};
-use crate::tilemap::{ExampleTile, LevelTileMap, TILEMAP_HEIGHT, TILEMAP_WIDTH};
+use crate::level::{IcyLevel, Level, LevelMap};
+use crate::tilemap::{ExampleTile, TILEMAP_HEIGHT, TILEMAP_WIDTH};
 use amethyst::input::{is_key_down, VirtualKeyCode};
 
 #[derive(Default)]
@@ -61,7 +61,7 @@ impl SimpleState for GameState {
     let map_sprite_sheet_handle =
       load_sprite_sheet(data.world, "texture/icy.png", "texture/icy.ron");
 
-    let map = TileMap::<ExampleTile, MortonEncoder>::new(
+    let tilemap = TileMap::<ExampleTile, MortonEncoder>::new(
       Vector3::new(TILEMAP_WIDTH, TILEMAP_HEIGHT, 2),
       Vector3::new(128, 128, 1),
       Some(map_sprite_sheet_handle),
@@ -70,7 +70,7 @@ impl SimpleState for GameState {
     self.map_entity = Some(
       world
         .create_entity()
-        .with(map)
+        .with(tilemap)
         .with(Transform::from(Vector3::new(0.0, -64.0, 0.0)))
         .with(Velocity {
           x: -1.0,
@@ -81,8 +81,8 @@ impl SimpleState for GameState {
     );
     let mut level = IcyLevel::new(TILEMAP_WIDTH as usize, TILEMAP_HEIGHT as usize);
     level.gen_map();
-    println!("{:?}", level.map);
-    world.insert(LevelTileMap { items: level.map });
+
+    world.insert(level.map_layers);
     init_camera(&mut world);
   }
 
