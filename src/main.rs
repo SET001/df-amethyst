@@ -28,7 +28,7 @@ mod tilemap;
 use crate::states::LoadingState;
 use tilemap::ExampleTile;
 
-type MyPrefabData = BasicScenePrefab<(Vec<Position>, Vec<Normal>, Vec<TexCoord>)>;
+// type MyPrefabData = BasicScenePrefab<(Vec<Position>, Vec<Normal>, Vec<TexCoord>)>;
 
 fn main() -> amethyst::Result<()> {
   amethyst::start_logger(Default::default());
@@ -53,7 +53,8 @@ fn main() -> amethyst::Result<()> {
     )?
     .with(system::ScrollerSystem, "scrolling_system", &[])
     .with(system::RangedScrollerSystem, "ranged_scrolling_system", &[])
-    .with(system::VelocitySystem, "velocity_system", &[]);
+    .with(system::VelocitySystem, "velocity_system", &[])
+    .with(system::TileRotateSystem, "tile_rotate", &[]);
 
   let assets_dir = app_root.join("assets");
   let mut game = Application::build(assets_dir, LoadingState::new())?

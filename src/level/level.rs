@@ -14,3 +14,9 @@ impl MapLayers {
     MapLayers([[default_tile; MAP_WIDTH]; MAP_LAYERS])
   }
 }
+
+impl Default for MapLayers {
+  fn default() -> MapLayers {
+    MapLayers([[0; MAP_WIDTH]; MAP_LAYERS])
+  }
+}

@@ -4,7 +4,7 @@ use amethyst::{
     math::{Point3, Vector3},
     Time, Transform,
   },
-  ecs::prelude::Entity,
+  ecs::{prelude::Entity, Read},
   prelude::*,
   renderer::camera::Camera,
   renderer::{
@@ -24,8 +24,8 @@ use amethyst::{
 };
 
 use super::menu::MenuState;
-use crate::component::Velocity;
-use crate::level::{IcyLevel, Level, LevelMap};
+use crate::component::{TileRotate, Velocity};
+use crate::level::{IcyLevel, Level, LevelMap, MapLayers};
 use crate::tilemap::{ExampleTile, TILEMAP_HEIGHT, TILEMAP_WIDTH};
 use amethyst::input::{is_key_down, VirtualKeyCode};
 
@@ -67,6 +67,7 @@ impl SimpleState for GameState {
       Some(map_sprite_sheet_handle),
     );
     let mut world = data.world;
+    world.register::<TileRotate>();
     self.map_entity = Some(
       world
         .create_entity()
@@ -77,12 +78,20 @@ impl SimpleState for GameState {
           y: 0.0,
           z: 0.0,
         })
+        .with(TileRotate::default())
         .build(),
     );
+
     let mut level = IcyLevel::new(TILEMAP_WIDTH as usize, TILEMAP_HEIGHT as usize);
     level.gen_map();
+    world.insert::<MapLayers>(level.map_layers);
+    // world.setup::<Read<MapLayers>>();
 
-    world.insert(level.map_layers);
+    // let aa_entity = Some(
+    //   world
+    //     .create_entity()
+    //     .with(level)
+    // )
     init_camera(&mut world);
   }
 

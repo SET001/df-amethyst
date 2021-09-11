@@ -1,7 +1,15 @@
 mod dimensions;
 mod scroller;
+mod tileGenerator;
+mod tileMap;
+mod tileRotate;
 mod velocity;
 
-pub use self::dimensions::Dimensions;
-pub use self::scroller::{RangedScroller, Scroller, ScrollerItem};
-pub use self::velocity::Velocity;
+pub use {
+  dimensions::*,
+  scroller::{RangedScroller, Scroller, ScrollerItem},
+  tileGenerator::*,
+  tileMap::*,
+  tileRotate::*,
+  velocity::*,
+};
