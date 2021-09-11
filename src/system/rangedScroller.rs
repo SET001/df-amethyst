@@ -49,7 +49,7 @@ impl<'a> System<'a> for RangedScrollerSystem {
         lastX = transforms.get(lastItemEntity).unwrap().translation().x
       }
       if lastX < dimension.width {
-        println!("ranged scroller add new item {}, {}", lastX, itemsCount);
+        // println!("ranged scroller add new item {}, {}", lastX, itemsCount);
         let newItem = entities.create();
         updater.insert(
           newItem,
@@ -67,7 +67,7 @@ impl<'a> System<'a> for RangedScrollerSystem {
         );
         // let scale: f32 = rng.gen_range(30, 100) as f32 / 100.0;
         let scale = 0.5 * scroller.distance;
-        println!("scale is {}", 0.3 * scroller.distance);
+        // println!("scale is {}", 0.3 * scroller.distance);
         itemTransform.set_scale(Vector3::new(scale, scale, scale));
 
         updater.insert(newItem, scroller.tiles[0].0.clone());

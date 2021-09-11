@@ -52,7 +52,7 @@ impl<'a> System<'a> for ScrollerSystem {
         );
         let mut itemTransform = Transform::default();
         let x = (itemsCount as f32) * (itemWidth - 1.0) + itemWidth / 2.0;
-        println!("adding new item on {}", x);
+        // println!("adding new item on {}", x);
         itemTransform.set_translation_xyz(
           x,
           transform.translation().y - scroller.tiles[0].2 as f32 / 2.0,
