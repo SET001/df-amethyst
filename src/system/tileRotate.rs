@@ -28,7 +28,6 @@ impl<'a> System<'a> for TileRotateSystem {
       let x = transform.translation().x;
       if x == -128.0 {
         transform.set_translation_x(x + 128 as f32);
-        println!("{} -> {}", x, transform.translation().x);
         tileRotate.rotaionCycle += 1;
         shift_map(&mut ml.0[0]);
         shift_map(&mut ml.0[1]);
