@@ -28,7 +28,7 @@ mod tilemap;
 use crate::states::LoadingState;
 use tilemap::ExampleTile;
 
-// type MyPrefabData = BasicScenePrefab<(Vec<Position>, Vec<Normal>, Vec<TexCoord>)>;
+type MyPrefabData = BasicScenePrefab<(Vec<Position>, Vec<Normal>, Vec<TexCoord>)>;
 
 fn main() -> amethyst::Result<()> {
   amethyst::start_logger(Default::default());
@@ -38,6 +38,10 @@ fn main() -> amethyst::Result<()> {
 
   let game_data = GameDataBuilder::default()
     // .with_system_desc(PrefabLoaderSystemDesc::<MyPrefabData>::default(), "", &[])
+    .with(system::ScrollerSystem, "scrolling_system", &[])
+    .with(system::RangedScrollerSystem, "ranged_scrolling_system", &[])
+    .with(system::VelocitySystem, "velocity_system", &[])
+    .with(system::TileRotateSystem, "tile_rotate", &[])
     .with_bundle(TransformBundle::new())?
     .with_bundle(InputBundle::<StringBindings>::new())?
     .with_bundle(UiBundle::<StringBindings>::new())?
@@ -50,11 +54,7 @@ fn main() -> amethyst::Result<()> {
         .with_plugin(RenderFlat2D::default())
         .with_plugin(RenderUi::default())
         .with_plugin(RenderTiles2D::<ExampleTile, MortonEncoder>::default()),
-    )?
-    .with(system::ScrollerSystem, "scrolling_system", &[])
-    .with(system::RangedScrollerSystem, "ranged_scrolling_system", &[])
-    .with(system::VelocitySystem, "velocity_system", &[])
-    .with(system::TileRotateSystem, "tile_rotate", &[]);
+    )?;
 
   let assets_dir = app_root.join("assets");
   let mut game = Application::build(assets_dir, LoadingState::new())?

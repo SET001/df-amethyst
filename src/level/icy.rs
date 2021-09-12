@@ -10,7 +10,7 @@ const UPPER_COAST_TILE: u32 = 2;
 const BOTTOM_COAST_TILE: u32 = 3;
 const BOTTOM_COAST_AGE_TILE: u32 = 4;
 const DEFAULT_TILE: u32 = 5;
-const BOTTOM_SNOW_TILES: [u32; 4] = [5, 0, 0, 6];
+const BOTTOM_SNOW_TILES: [u32; 9] = [5, 6, 7, 8, 9, 10, 11, 12, 13];
 
 fn get_coordinates_from_index(index: u32, width: u32) -> (u32, u32) {
   return (index % width, index / width);
