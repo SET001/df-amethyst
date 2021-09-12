@@ -12,11 +12,6 @@ use rand::Rng;
 
 // fn shift_layers(mut map: LevelMap) {}
 
-fn should_rotate(x: f32, rc: u32) -> bool {
-  let limit = (rc + 1) as f32 * -128.0;
-  x + 1.0 == limit
-}
-
 // fn gen_map_col() {}
 
 impl<'a> System<'a> for TileRotateSystem {
@@ -31,9 +26,9 @@ impl<'a> System<'a> for TileRotateSystem {
   fn run(&mut self, (mut tileRotates, mut transforms, mut ml): Self::SystemData) {
     for (tileRotate, transform) in (&mut tileRotates, &mut transforms).join() {
       let x = transform.translation().x;
-      let rc = tileRotate.rotaionCycle;
-      if should_rotate(x, rc) {
-        transform.set_translation_x(x + 129 as f32);
+      if x == -128.0 {
+        transform.set_translation_x(x + 128 as f32);
+        println!("{} -> {}", x, transform.translation().x);
         tileRotate.rotaionCycle += 1;
         shift_map(&mut ml.0[0]);
         shift_map(&mut ml.0[1]);
@@ -74,12 +69,12 @@ fn shift_map(lm: &mut LevelMap) {
 #[cfg(test)]
 mod test {
   use super::*;
-  #[test]
-  fn test_should_rotate() {
-    assert_eq!(should_rotate(10.0, 1), false);
-    assert_eq!(should_rotate(10.0, 0), false);
-    assert_eq!(should_rotate(10.0, 0), false);
-  }
+  // #[test]
+  // fn test_should_rotate() {
+  //   assert_eq!(should_rotate(10.0, 1), false);
+  //   assert_eq!(should_rotate(10.0, 0), false);
+  //   assert_eq!(should_rotate(10.0, 0), false);
+  // }
 
   #[test]
   fn test_shift_map() {
