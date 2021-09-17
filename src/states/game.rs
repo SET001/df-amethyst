@@ -3,11 +3,7 @@ use crate::tilemap::ExampleTile;
 
 use amethyst::{
   assets::{DefaultLoader, Handle, Loader, ProcessingQueue},
-  core::{
-    math::Vector3,
-    transform::{Parent, Transform},
-    Named,
-  },
+  core::{math::Vector3, transform::Transform, Named},
   input::{is_close_requested, is_key_down},
   prelude::*,
   renderer::{
@@ -27,8 +23,7 @@ const TILEMAP_HEIGHT: u32 = 8;
 
 impl SimpleState for GameState {
   fn on_start(&mut self, data: StateData<'_, GameData>) {
-    let mut world = data.world;
-    println!("GameState.on_start");
+    let world = data.world;
 
     let (width, height) = {
       let dim = data
@@ -40,21 +35,20 @@ impl SimpleState for GameState {
       println!("window: {:?}", window);
       (dim.width(), dim.height())
     };
-    println!("{}, {}", width, height);
     let mut transform = Transform::default();
     transform.set_translation_xyz(0.0, 0.0, 10.0);
+
     let camera = world.push((
       Named("camera".into()),
-      // Parent(player),
       transform,
       Camera::standard_2d(width, height),
     ));
     data.resources.insert(ActiveCamera {
       entity: Some(camera),
     });
+
     let map_sprite_sheet_handle =
       load_sprite_sheet(data.resources, "texture/icy.png", "texture/icy.ron");
-    println!("{:?}", map_sprite_sheet_handle);
     let tilemap = TileMap::<ExampleTile, MortonEncoder>::new(
       Vector3::new(TILEMAP_WIDTH, TILEMAP_HEIGHT, 2),
       Vector3::new(128, 128, 1),
@@ -63,11 +57,11 @@ impl SimpleState for GameState {
     world.push((
       tilemap,
       Transform::from(Vector3::new(0.0, 0.0, 0.0)),
-      // Velocity {
-      //   x: -1.0,
-      //   y: 0.0,
-      //   z: 0.0,
-      // },
+      Velocity {
+        x: -1.0,
+        y: 0.0,
+        z: 0.0,
+      },
     ));
   }
 

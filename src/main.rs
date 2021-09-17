@@ -12,7 +12,7 @@ use amethyst::{
     types::DefaultBackend,
     RenderingBundle,
   },
-  tiles::{DrawTiles2DBoundsCameraCulling, MortonEncoder, RenderTiles2D},
+  tiles::{MortonEncoder, RenderTiles2D},
   utils::{application_root_dir, fps_counter::FpsCounterBundle},
 };
 // use log::info;
@@ -50,11 +50,7 @@ fn main() -> amethyst::Result<()> {
         }),
       )
       .with_plugin(RenderFlat2D::default())
-      .with_plugin(RenderTiles2D::<
-        ExampleTile,
-        MortonEncoder,
-        // DrawTiles2DBoundsCameraCulling,
-      >::default()),
+      .with_plugin(RenderTiles2D::<ExampleTile, MortonEncoder>::default()),
   );
   let game = Application::new(assets_dir, GameState::default(), dispatcher)?;
   game.run();

@@ -30,7 +30,7 @@ impl Tile for ExampleTile {
     // let level = (*world.read_resource::<MapLayers>()).0;
     // let index = get_map_index(pos[0], pos[1], TILEMAP_WIDTH) as usize;
     // return Some(level[pos[2] as usize][index] as usize);
-    if (pos[2] == 0) {
+    if pos[2] == 0 {
       Some(DEFAULT_TILE)
     } else {
       Some(match pos.y {
