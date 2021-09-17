@@ -72,7 +72,7 @@ dependencies = [
 [[package]]
 name = "amethyst"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "amethyst_animation",
  "amethyst_assets",
@@ -95,7 +95,7 @@ dependencies = [
  "dirs-next",
  "glsl-layout",
  "lazy_static",
- "legion 0.4.0",
+ "legion",
  "log",
  "palette 0.5.0",
  "rayon",
@@ -108,7 +108,7 @@ dependencies = [
 [[package]]
 name = "amethyst_animation"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "alga",
  "amethyst_assets",
@@ -118,8 +118,8 @@ dependencies = [
  "amethyst_ui",
  "derivative",
  "fnv",
- "legion 0.4.0",
- "legion-prefab 0.1.0 (git+https://github.com/amethyst/prefab?rev=8565883493aaf6044e210ffe2e72eec519d46369)",
+ "legion",
+ "legion-prefab",
  "log",
  "minterpolate",
  "serde",
@@ -130,7 +130,7 @@ dependencies = [
 [[package]]
 name = "amethyst_assets"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "amethyst_core",
  "amethyst_error",
@@ -148,10 +148,10 @@ dependencies = [
  "futures-executor",
  "inventory",
  "lazy_static",
- "legion-prefab 0.1.0 (git+https://github.com/amethyst/prefab?rev=8565883493aaf6044e210ffe2e72eec519d46369)",
+ "legion-prefab",
  "log",
  "parking_lot",
- "prefab-format 0.1.0 (git+https://github.com/amethyst/prefab?rev=8565883493aaf6044e210ffe2e72eec519d46369)",
+ "prefab-format",
  "rayon",
  "ron",
  "serde",
@@ -165,7 +165,7 @@ dependencies = [
 [[package]]
 name = "amethyst_audio"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "amethyst_assets",
  "amethyst_core",
@@ -182,7 +182,7 @@ dependencies = [
 [[package]]
 name = "amethyst_config"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "encoding_rs_io",
  "ron",
@@ -192,7 +192,7 @@ dependencies = [
 [[package]]
 name = "amethyst_controls"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "amethyst_core",
  "amethyst_error",
@@ -206,7 +206,7 @@ dependencies = [
 [[package]]
 name = "amethyst_core"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "amethyst_error",
  "approx 0.5.0",
@@ -214,8 +214,8 @@ dependencies = [
  "fern",
  "game_clock",
  "getset",
- "legion 0.4.0",
- "legion-prefab 0.1.0 (git+https://github.com/amethyst/prefab?rev=8565883493aaf6044e210ffe2e72eec519d46369)",
+ "legion",
+ "legion-prefab",
  "log",
  "nalgebra",
  "num-traits 0.2.14",
@@ -232,7 +232,7 @@ dependencies = [
 [[package]]
 name = "amethyst_derive"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "glob",
  "proc-macro2 1.0.29",
@@ -244,7 +244,7 @@ dependencies = [
 [[package]]
 name = "amethyst_error"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "backtrace",
 ]
@@ -252,7 +252,7 @@ dependencies = [
 [[package]]
 name = "amethyst_input"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "amethyst_config",
  "amethyst_core",
@@ -268,7 +268,7 @@ dependencies = [
 [[package]]
 name = "amethyst_locale"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "amethyst_assets",
  "amethyst_core",
@@ -282,7 +282,7 @@ dependencies = [
 [[package]]
 name = "amethyst_network"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "amethyst_core",
  "amethyst_error",
@@ -295,7 +295,7 @@ dependencies = [
 [[package]]
 name = "amethyst_rendy"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "amethyst_assets",
  "amethyst_config",
@@ -311,7 +311,7 @@ dependencies = [
  "gltf",
  "indexmap",
  "lazy_static",
- "legion-prefab 0.1.0 (git+https://github.com/amethyst/prefab?rev=8565883493aaf6044e210ffe2e72eec519d46369)",
+ "legion-prefab",
  "log",
  "palette 0.4.1",
  "rendy",
@@ -325,7 +325,7 @@ dependencies = [
 [[package]]
 name = "amethyst_tiles"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "amethyst_assets",
  "amethyst_core",
@@ -348,7 +348,7 @@ dependencies = [
 [[package]]
 name = "amethyst_ui"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "amethyst_assets",
  "amethyst_audio",
@@ -366,7 +366,7 @@ dependencies = [
  "glsl-layout",
  "glyph_brush",
  "lazy_static",
- "legion-prefab 0.1.0 (git+https://github.com/amethyst/prefab?rev=8565883493aaf6044e210ffe2e72eec519d46369)",
+ "legion-prefab",
  "log",
  "paste",
  "rand 0.8.4",
@@ -382,7 +382,7 @@ dependencies = [
 [[package]]
 name = "amethyst_utils"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "amethyst_assets",
  "amethyst_core",
@@ -399,7 +399,7 @@ dependencies = [
 [[package]]
 name = "amethyst_window"
 version = "0.16.0"
-source = "git+https://github.com/amethyst/amethyst?branch=main#1ec6efeecb76712302c2efd50bf67874e65e09d5"
+source = "git+https://github.com/SET001/amethyst?branch=tilemap_update#37ce55a886b7b399c75b16775832d86bf1458d1f"
 dependencies = [
  "amethyst_config",
  "amethyst_core",
@@ -1255,11 +1255,8 @@ version = "0.1.0"
 dependencies = [
  "amethyst",
  "enum-map",
- "legion-prefab 0.1.0 (git+https://github.com/amethyst/prefab?rev=7c30249f106e6177549e223ca2823eec8ab6c70b)",
  "log",
- "prefab-format 0.1.0 (git+https://github.com/amethyst/prefab?rev=7c30249f106e6177549e223ca2823eec8ab6c70b)",
  "rand 0.7.3",
- "ron",
  "serde",
  "uuid",
 ]
@@ -2292,15 +2289,6 @@ dependencies = [
 
 [[package]]
 name = "itertools"
-version = "0.9.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "284f18f85651fe11e8a991b2adb42cb078325c996ed026d994719efcfca1d54b"
-dependencies = [
- "either",
-]
-
-[[package]]
-name = "itertools"
 version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "69ddb889f9d0d08a67338271fa9b62996bc788c7796a5c18cf057420aaed5eaf"
@@ -2383,25 +2371,6 @@ checksum = "830d08ce1d1d941e6b30645f1a0eb5643013d835ce3779a5fc208261dbe10f55"
 
 [[package]]
 name = "legion"
-version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9aa40f1a5f64dfdc1830657e0e7dd2c28087c4e32a2a85fcf63a286c429edefc"
-dependencies = [
- "bit-set",
- "derivative",
- "downcast-rs",
- "erased-serde",
- "itertools 0.9.0",
- "parking_lot",
- "paste",
- "serde",
- "smallvec",
- "thiserror",
- "uuid",
-]
-
-[[package]]
-name = "legion"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6bfd53bb4690a5ab2bd6d1c683461ee52763afe0d000929743708a256d9d9b1f"
@@ -2411,7 +2380,7 @@ dependencies = [
  "crossbeam-channel",
  "downcast-rs",
  "erased-serde",
- "itertools 0.10.1",
+ "itertools",
  "legion_codegen",
  "parking_lot",
  "paste",
@@ -2426,32 +2395,14 @@ dependencies = [
 [[package]]
 name = "legion-prefab"
 version = "0.1.0"
-source = "git+https://github.com/amethyst/prefab?rev=7c30249f106e6177549e223ca2823eec8ab6c70b#7c30249f106e6177549e223ca2823eec8ab6c70b"
-dependencies = [
- "erased-serde",
- "fnv",
- "inventory",
- "legion 0.3.1",
- "parking_lot",
- "prefab-format 0.1.0 (git+https://github.com/amethyst/prefab?rev=7c30249f106e6177549e223ca2823eec8ab6c70b)",
- "ron",
- "serde",
- "serde-diff",
- "type-uuid",
- "uuid",
-]
-
-[[package]]
-name = "legion-prefab"
-version = "0.1.0"
 source = "git+https://github.com/amethyst/prefab?rev=8565883493aaf6044e210ffe2e72eec519d46369#8565883493aaf6044e210ffe2e72eec519d46369"
 dependencies = [
  "erased-serde",
  "fnv",
  "inventory",
- "legion 0.4.0",
+ "legion",
  "parking_lot",
- "prefab-format 0.1.0 (git+https://github.com/amethyst/prefab?rev=8565883493aaf6044e210ffe2e72eec519d46369)",
+ "prefab-format",
  "ron",
  "serde",
  "serde-diff",
@@ -3458,17 +3409,6 @@ name = "ppv-lite86"
 version = "0.2.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ac74c624d6b2d21f425f752262f42188365d7b8ff1aff74c82e45136510a4857"
-
-[[package]]
-name = "prefab-format"
-version = "0.1.0"
-source = "git+https://github.com/amethyst/prefab?rev=7c30249f106e6177549e223ca2823eec8ab6c70b#7c30249f106e6177549e223ca2823eec8ab6c70b"
-dependencies = [
- "serde",
- "serde-diff",
- "type-uuid",
- "uuid",
-]
 
 [[package]]
 name = "prefab-format"

@@ -9,7 +9,7 @@ use crate::component::Velocity;
 pub struct VelocitySystem;
 
 impl System for VelocitySystem {
-  fn build(mut self) -> Box<dyn ParallelRunnable> {
+  fn build(self) -> Box<dyn ParallelRunnable> {
     Box::new(
       SystemBuilder::new("VelocitySystem")
         .with_query(<(&Velocity, &mut Transform)>::query())

@@ -6,12 +6,9 @@ edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
-amethyst = {git="https://github.com/amethyst/amethyst", branch="main", version="0.16.0", features = ["optional"]}
+amethyst = {git="https://github.com/SET001/amethyst", branch="tilemap_update", version="0.16.0", features = ["optional"]}
 serde = { version = "1.0.130", features = ["derive"] }
 log = { version = "0.4.8", features = ["serde"] }
 enum-map = { version = "0.6.2", features = ["serde"]}
 uuid = { version = "0.8", features = ["serde", "v4"] }
 rand = "0.7.3"
-ron = "^0.6"
-legion-prefab = { git = "https://github.com/amethyst/prefab", rev = "7c30249f106e6177549e223ca2823eec8ab6c70b" }
-prefab-format = { git = "https://github.com/amethyst/prefab", rev = "7c30249f106e6177549e223ca2823eec8ab6c70b" }

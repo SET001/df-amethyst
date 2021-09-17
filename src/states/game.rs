@@ -16,13 +16,13 @@ use amethyst::{
     Texture,
   },
   tiles::{MortonEncoder, TileMap},
-  window::ScreenDimensions,
+  window::{ScreenDimensions, Window},
   winit,
 };
 #[derive(Default)]
 pub struct GameState {}
 
-const TILEMAP_WIDTH: u32 = 50;
+const TILEMAP_WIDTH: u32 = 10;
 const TILEMAP_HEIGHT: u32 = 8;
 
 impl SimpleState for GameState {
@@ -35,13 +35,18 @@ impl SimpleState for GameState {
         .resources
         .get::<ScreenDimensions>()
         .expect("Read ScreenDimensions");
+      let window = data.resources.get::<Window>().expect("Read Window");
+      println!("dimensions: {:?}", dim);
+      println!("window: {:?}", window);
       (dim.width(), dim.height())
     };
     println!("{}, {}", width, height);
+    let mut transform = Transform::default();
+    transform.set_translation_xyz(0.0, 0.0, 10.0);
     let camera = world.push((
       Named("camera".into()),
       // Parent(player),
-      Transform::from(Vector3::new(0.0, 0.0, 1.1)),
+      transform,
       Camera::standard_2d(width, height),
     ));
     data.resources.insert(ActiveCamera {
@@ -51,18 +56,18 @@ impl SimpleState for GameState {
       load_sprite_sheet(data.resources, "texture/icy.png", "texture/icy.ron");
     println!("{:?}", map_sprite_sheet_handle);
     let tilemap = TileMap::<ExampleTile, MortonEncoder>::new(
-      Vector3::new(TILEMAP_WIDTH, TILEMAP_HEIGHT, 1),
+      Vector3::new(TILEMAP_WIDTH, TILEMAP_HEIGHT, 2),
       Vector3::new(128, 128, 1),
       Some(map_sprite_sheet_handle),
     );
     world.push((
       tilemap,
-      Transform::default(),
-      Velocity {
-        x: -1.0,
-        y: 0.0,
-        z: 0.0,
-      },
+      Transform::from(Vector3::new(0.0, 0.0, 0.0)),
+      // Velocity {
+      //   x: -1.0,
+      //   y: 0.0,
+      //   z: 0.0,
+      // },
     ));
   }
 
