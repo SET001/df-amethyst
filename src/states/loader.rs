@@ -1,4 +1,3 @@
-use super::game::GameState;
 use amethyst::{
   assets::{AssetStorage, Handle, Loader, ProgressCounter},
   prelude::*,
@@ -62,18 +61,18 @@ impl<'a> LoadingState<'a> {
 }
 
 impl SimpleState for LoadingState<'_> {
-  fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
+  fn on_start(&mut self, data: StateData<'_, GameData>) {
     println!("loading assets...");
     let handles = self.load::<Texture>(&data.world);
     data.world.insert(handles);
   }
 
-  fn update(&mut self, _data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
-    if self.progress_counter.is_complete() {
-      println!("assets loading complete...");
-      Trans::Switch(Box::new(GameState::default()))
-    } else {
-      Trans::None
-    }
-  }
+  // fn update(&mut self, data: StateData<'_, GameData>) -> SimpleTrans {
+  //   if self.progress_counter.is_complete() {
+  //     println!("assets loading complete...");
+  //     Trans::Switch(Box::new(GameState::default()))
+  //   } else {
+  //     Trans::None
+  //   }
+  // }
 }

@@ -1,2 +1,6 @@
 /target
 **/*.rs.bk
+# Distill Assets
+.assets_db
+prefab.ron
+*.meta

@@ -1,4 +1,4 @@
-use crate::level::MapLayers;
+// use crate::level::MapLayers;
 use amethyst::{
   core::math::{Point2, Point3, Vector3},
   prelude::*,
@@ -17,10 +17,11 @@ pub fn get_map_index(x: u32, y: u32, width: u32) -> u32 {
 }
 
 impl Tile for ExampleTile {
-  fn sprite(&self, pos: Point3<u32>, world: &World) -> Option<usize> {
-    let level = (*world.read_resource::<MapLayers>()).0;
-    let index = get_map_index(pos[0], pos[1], TILEMAP_WIDTH) as usize;
-    return Some(level[pos[2] as usize][index] as usize);
+  fn sprite(&self, _: Point3<u32>, _: &World) -> Option<usize> {
+    // let level = (*world.read_resource::<MapLayers>()).0;
+    // let index = get_map_index(pos[0], pos[1], TILEMAP_WIDTH) as usize;
+    // return Some(level[pos[2] as usize][index] as usize);
+    Some(0)
   }
 }
 

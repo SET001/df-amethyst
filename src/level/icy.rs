@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand::{rngs::ThreadRng, Rng};
 
 use crate::level::{
   Level,
@@ -12,7 +12,7 @@ const BOTTOM_COAST_AGE_TILE: u32 = 4;
 const DEFAULT_TILE: u32 = 5;
 const BOTTOM_SNOW_TILES: [u32; 9] = [5, 6, 7, 8, 9, 10, 11, 12, 13];
 
-fn get_coordinates_from_index(index: u32, width: u32) -> (u32, u32) {
+pub fn get_coordinates_from_index(index: u32, width: u32) -> (u32, u32) {
   return (index % width, index / width);
 }
 
@@ -20,6 +20,7 @@ pub struct IcyLevel {
   height: usize,
   width: usize,
   pub map_layers: MapLayers,
+  rng: ThreadRng,
 }
 
 impl IcyLevel {
@@ -28,11 +29,12 @@ impl IcyLevel {
       height,
       width,
       map_layers: MapLayers::new(DEFAULT_TILE),
+      rng: rand::thread_rng(),
     }
   }
 
   pub fn gen_bottom(&mut self) {
-    let mut rng = rand::thread_rng();
+    let mut rng = self.rng;
     self.map_layers.0[0]
       .iter_mut()
       .enumerate()
@@ -41,6 +43,7 @@ impl IcyLevel {
 
   pub fn gen_upper_coast(&mut self) {
     let width = self.width;
+    let mut rng = self.rng;
     self.map_layers.0[1]
       .iter_mut()
       .enumerate()
@@ -50,9 +53,16 @@ impl IcyLevel {
           0 => UPPER_COAST_TILE,
           1 => ICE_WALL_TILE,
           2 => ICE_WALL_AGE_TILE,
-          _ => *tile,
+          6 => BOTTOM_COAST_AGE_TILE,
+          7 => BOTTOM_COAST_TILE,
+          _ => DEFAULT_TILE,
         }
       });
+
+    self.map_layers.0[0]
+      .iter_mut()
+      .enumerate()
+      .for_each(|(_, x)| *x = BOTTOM_SNOW_TILES[rng.gen_range(0, BOTTOM_SNOW_TILES.len() - 1)]);
   }
 
   pub fn gen_bottom_coast(&mut self) {
@@ -70,6 +80,10 @@ impl IcyLevel {
         };
       });
   }
+
+  pub fn gen_bottom_coast_tile(&mut self, x: u32, y: u32) -> u32 {
+    2
+  }
 }
 
 impl Level for IcyLevel {
@@ -77,6 +91,18 @@ impl Level for IcyLevel {
     self.gen_bottom();
     self.gen_upper_coast();
     self.gen_bottom_coast();
+  }
+
+  fn gen_tile(&self, y: u32) -> u32 {
+    // let (_, y) = get_coordinates_from_index(index, self.width as u32);
+    match y {
+      0 => UPPER_COAST_TILE,
+      1 => ICE_WALL_TILE,
+      2 => ICE_WALL_AGE_TILE,
+      6 => BOTTOM_COAST_AGE_TILE,
+      7 => BOTTOM_COAST_TILE,
+      _ => DEFAULT_TILE,
+    }
   }
 }
 

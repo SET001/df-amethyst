@@ -1,5 +1,5 @@
 use crate::component::TileRotate;
-use crate::level::{LevelMap, MapLayers};
+use crate::level::{IcyLevel, Level, LevelMap, MapLayers};
 // use crate::tilemap::{ExampleTile, TILEMAP_HEIGHT, TILEMAP_WIDTH};
 use amethyst::{
   core::Transform,
@@ -27,10 +27,13 @@ impl<'a> System<'a> for TileRotateSystem {
     for (tileRotate, transform) in (&mut tileRotates, &mut transforms).join() {
       let x = transform.translation().x;
       if x == -128.0 {
+        let level = match &tileRotate.tileGenerator {
+          default => IcyLevel::new(SCREEN_WIDTH, SCREEN_HEIGHT),
+        };
         transform.set_translation_x(x + 128 as f32);
         tileRotate.rotaionCycle += 1;
-        shift_map(&mut ml.0[0]);
-        shift_map(&mut ml.0[1]);
+        shift_map(&mut ml.0[0], &level);
+        shift_map(&mut ml.0[1], &level);
       }
     }
   }
@@ -52,13 +55,12 @@ const MAP_LENGHT: usize = SCREEN_HEIGHT * SCREEN_WIDTH;
 //   }
 // }
 
-fn shift_map(lm: &mut LevelMap) {
+fn shift_map(lm: &mut LevelMap, level: &impl Level) {
   let mut map = lm.clone();
   let mut rng = rand::thread_rng();
-  let tile = rng.gen_range(1, 9);
   for (i, el) in &mut map.chunks_mut(SCREEN_WIDTH).enumerate() {
     el.rotate_left(1);
-    el[el.len() - 1] = tile;
+    el[el.len() - 1] = level.gen_tile(i as u32);
     el.iter()
       .enumerate()
       .for_each(|(j, x)| lm[i * SCREEN_WIDTH + j] = *x);

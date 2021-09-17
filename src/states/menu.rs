@@ -26,7 +26,7 @@ pub struct MenuState {
 }
 
 impl SimpleState for MenuState {
-  fn handle_event(&mut self, _: StateData<'_, GameData<'_, '_>>, event: StateEvent) -> SimpleTrans {
+  fn handle_event(&mut self, data: StateData<'_, GameData>) -> SimpleTrans {
     match event {
       StateEvent::Window(event) => {
         if is_key_down(&event, VirtualKeyCode::Escape) {
@@ -53,7 +53,7 @@ impl SimpleState for MenuState {
     }
   }
 
-  fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
+  fn on_start(&mut self, data: StateData<'_, GameData>) {
     let mut world = data.world;
     world.register::<Scroller>();
     world.register::<Dimensions>();
@@ -72,7 +72,7 @@ impl SimpleState for MenuState {
     data.world.delete_all()
   }
 
-  fn update(&mut self, state_data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
+  fn update(&mut self, data: StateData<'_, GameData>) -> SimpleTrans {
     let StateData { world, .. } = state_data;
     if self.button_start.is_none() {
       world.exec(|ui_finder: UiFinder<'_>| {

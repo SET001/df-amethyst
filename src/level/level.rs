@@ -1,5 +1,7 @@
 pub trait Level {
   fn gen_map(&mut self);
+
+  fn gen_tile(&self, index: u32) -> u32;
 }
 
 pub const MAP_LAYERS: usize = 2;
