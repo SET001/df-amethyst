@@ -13,6 +13,7 @@ use amethyst::{
     RenderingBundle,
   },
   tiles::{MortonEncoder, RenderTiles2D},
+  ui::{RenderUi, UiBundle},
   utils::{application_root_dir, fps_counter::FpsCounterBundle},
 };
 // use log::info;
@@ -41,7 +42,9 @@ fn main() -> amethyst::Result<()> {
   dispatcher.add_bundle(LoaderBundle);
   dispatcher.add_bundle(TransformBundle);
   dispatcher.add_bundle(InputBundle::new());
+  dispatcher.add_bundle(UiBundle::<u32>::default());
   dispatcher.add_bundle(DfBundle);
+  dispatcher.add_bundle(FpsCounterBundle::default());
   dispatcher.add_bundle(
     RenderingBundle::<DefaultBackend>::new()
       .with_plugin(
@@ -49,6 +52,7 @@ fn main() -> amethyst::Result<()> {
           float32: [0.0, 0.0, 0.0, 1.0],
         }),
       )
+      .with_plugin(RenderUi::default())
       .with_plugin(RenderFlat2D::default())
       .with_plugin(RenderTiles2D::<ExampleTile, MortonEncoder>::default()),
   );

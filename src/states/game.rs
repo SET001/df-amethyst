@@ -12,11 +12,16 @@ use amethyst::{
     Texture,
   },
   tiles::{MortonEncoder, TileMap},
+  ui::{Anchor, FontAsset, LineMode, UiLabel, UiLabelBuilder, UiText},
+  utils::fps_counter::FpsCounter,
   window::{ScreenDimensions, Window},
   winit,
 };
+
 #[derive(Default)]
-pub struct GameState {}
+pub struct GameState {
+  fpsLabel: Option<UiLabel>,
+}
 
 const TILEMAP_WIDTH: u32 = 10;
 const TILEMAP_HEIGHT: u32 = 8;
@@ -24,13 +29,13 @@ const TILEMAP_HEIGHT: u32 = 8;
 impl SimpleState for GameState {
   fn on_start(&mut self, data: StateData<'_, GameData>) {
     let world = data.world;
+    let mut resources = data.resources;
 
     let (width, height) = {
-      let dim = data
-        .resources
+      let dim = resources
         .get::<ScreenDimensions>()
         .expect("Read ScreenDimensions");
-      let window = data.resources.get::<Window>().expect("Read Window");
+      let window = resources.get::<Window>().expect("Read Window");
       println!("dimensions: {:?}", dim);
       println!("window: {:?}", window);
       (dim.width(), dim.height())
@@ -43,12 +48,12 @@ impl SimpleState for GameState {
       transform,
       Camera::standard_2d(width, height),
     ));
-    data.resources.insert(ActiveCamera {
+    resources.insert(ActiveCamera {
       entity: Some(camera),
     });
 
     let map_sprite_sheet_handle =
-      load_sprite_sheet(data.resources, "texture/icy.png", "texture/icy.ron");
+      load_sprite_sheet(resources, "texture/icy.png", "texture/icy.ron");
     let tilemap = TileMap::<ExampleTile, MortonEncoder>::new(
       Vector3::new(TILEMAP_WIDTH, TILEMAP_HEIGHT, 2),
       Vector3::new(128, 128, 1),
@@ -63,6 +68,20 @@ impl SimpleState for GameState {
         z: 0.0,
       },
     ));
+    let font_handle: Handle<FontAsset> = {
+      let loader = resources.get::<DefaultLoader>().expect("Get Loader");
+      loader.load("font/square.ttf")
+    };
+    let (id, label) = UiLabelBuilder::<(), u32>::new(&"Multiline\nText!")
+      .with_line_mode(LineMode::Wrap)
+      .with_position(100., -50.)
+      .with_size(400., 200.)
+      .with_anchor(Anchor::TopLeft)
+      .with_font(font_handle)
+      .with_font_size(30.)
+      .with_text_color([0.34, 0.36, 0.52, 1.0])
+      .build_from_world_and_resources(world, resources);
+    self.fpsLabel = Some(label);
   }
 
   fn handle_event(&mut self, data: StateData<'_, GameData>, event: StateEvent) -> SimpleTrans {
@@ -76,6 +95,22 @@ impl SimpleState for GameState {
     } else {
       Trans::None
     }
+  }
+
+  fn update(&mut self, data: &mut StateData<'_, GameData>) -> SimpleTrans {
+    if self.fpsLabel.is_some() {
+      let fps = data.resources.get::<FpsCounter>().unwrap().sampled_fps();
+      if let Some(entry) = data
+        .world
+        .entry(self.fpsLabel.as_ref().unwrap().text_entity)
+      {
+        match entry.into_component_mut::<UiText>() {
+          Ok(text) => text.text = format!("FPS: {:.*}", 2, fps),
+          Err(_) => (),
+        };
+      }
+    }
+    Trans::None
   }
 }
 
