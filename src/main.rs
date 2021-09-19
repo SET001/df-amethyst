@@ -24,11 +24,11 @@ mod component;
 mod hud;
 mod states;
 mod system;
-mod tilemap;
+mod tiles;
 
 use bundle::DfBundle;
 use states::{GameState, LoadingState};
-use tilemap::ExampleTile;
+use tiles::{IcyTile, SteppeTile};
 
 fn main() -> amethyst::Result<()> {
   amethyst::Logger::from_config(Default::default())
@@ -55,7 +55,8 @@ fn main() -> amethyst::Result<()> {
       )
       .with_plugin(RenderUi::default())
       .with_plugin(RenderFlat2D::default())
-      .with_plugin(RenderTiles2D::<ExampleTile, MortonEncoder>::default()),
+      .with_plugin(RenderTiles2D::<IcyTile, MortonEncoder>::default())
+      .with_plugin(RenderTiles2D::<SteppeTile, MortonEncoder>::default()),
   );
   let game = Application::new(assets_dir, LoadingState::new(), dispatcher)?;
   game.run();

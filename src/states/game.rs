@@ -1,6 +1,6 @@
 use crate::component::Velocity;
 use crate::hud::{DebugHud, Hud};
-use crate::tilemap::ExampleTile;
+use crate::tiles::{IcyTile, SteppeTile};
 
 use amethyst::{
   core::{math::Vector3, transform::Transform, Named},
@@ -30,7 +30,7 @@ impl SimpleState for GameState {
     let resources = data.resources;
     let (font, map_sprite_sheet) = {
       let assets = resources.get::<GameAssets>().expect("Get game assets");
-      (assets.square_font.clone(), assets.map_sprite_sheet.clone())
+      (assets.square_font.clone(), assets.tile_map.clone())
     };
 
     let mut hud = DebugHud::new(font);
@@ -54,7 +54,7 @@ impl SimpleState for GameState {
       entity: Some(camera),
     });
 
-    let tilemap = TileMap::<ExampleTile, MortonEncoder>::new(
+    let tilemap = TileMap::<IcyTile, MortonEncoder>::new(
       Vector3::new(TILEMAP_WIDTH, TILEMAP_HEIGHT, 2),
       Vector3::new(128, 128, 1),
       Some(map_sprite_sheet),
