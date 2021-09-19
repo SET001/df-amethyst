@@ -1,6 +1,7 @@
 /target
 misc
 **/*.rs.bk
+_*
 # Distill Assets
 .assets_db
 prefab.ron
