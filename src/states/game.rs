@@ -3,15 +3,10 @@ use crate::hud::{DebugHud, Hud};
 use crate::tilemap::ExampleTile;
 
 use amethyst::{
-  assets::{DefaultLoader, Handle, Loader, ProcessingQueue},
   core::{math::Vector3, transform::Transform, Named},
   input::{is_close_requested, is_key_down},
   prelude::*,
-  renderer::{
-    camera::{ActiveCamera, Camera},
-    sprite::{SpriteSheet, Sprites},
-    Texture,
-  },
+  renderer::camera::{ActiveCamera, Camera},
   tiles::{MortonEncoder, TileMap},
   window::ScreenDimensions,
   winit,
@@ -33,10 +28,9 @@ impl SimpleState for GameState {
 
     let world = data.world;
     let resources = data.resources;
-
-    let font = {
+    let (font, map_sprite_sheet) = {
       let assets = resources.get::<GameAssets>().expect("Get game assets");
-      assets.square_font.clone()
+      (assets.square_font.clone(), assets.map_sprite_sheet.clone())
     };
 
     let mut hud = DebugHud::new(font);
@@ -60,12 +54,10 @@ impl SimpleState for GameState {
       entity: Some(camera),
     });
 
-    let map_sprite_sheet_handle =
-      load_sprite_sheet(resources, "texture/icy.png", "texture/icy.ron");
     let tilemap = TileMap::<ExampleTile, MortonEncoder>::new(
       Vector3::new(TILEMAP_WIDTH, TILEMAP_HEIGHT, 2),
       Vector3::new(128, 128, 1),
-      Some(map_sprite_sheet_handle),
+      Some(map_sprite_sheet),
     );
     world.push((
       tilemap,
@@ -101,17 +93,4 @@ impl SimpleState for GameState {
 
     Trans::None
   }
-}
-
-fn load_sprite_sheet(
-  resources: &mut Resources,
-  png_path: &str,
-  ron_path: &str,
-) -> Handle<SpriteSheet> {
-  let loader = resources.get::<DefaultLoader>().expect("Get Loader");
-  let texture: Handle<Texture> = loader.load(png_path);
-  let sprites: Handle<Sprites> = loader.load(ron_path);
-  println!("{:?}, {:?}", texture, sprites);
-  let sprite_sheet_store = resources.get::<ProcessingQueue<SpriteSheet>>().unwrap();
-  loader.load_from_data(SpriteSheet { texture, sprites }, (), &sprite_sheet_store)
 }

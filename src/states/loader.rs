@@ -1,12 +1,17 @@
 use crate::GameState;
 use amethyst::{
-  assets::{DefaultLoader, Handle, Loader, ProgressCounter},
+  assets::{DefaultLoader, Handle, Loader, ProcessingQueue, ProgressCounter},
   prelude::*,
+  renderer::{
+    sprite::{SpriteSheet, Sprites},
+    Texture,
+  },
   ui::FontAsset,
 };
 
 pub struct GameAssets {
   pub square_font: Handle<FontAsset>,
+  pub map_sprite_sheet: Handle<SpriteSheet>,
 }
 
 pub struct LoadingState {
@@ -25,8 +30,11 @@ impl LoadingState {
       let loader = resources.get::<DefaultLoader>().expect("Get Loader");
       loader.load("font/square.ttf")
     };
+    let load_sprite_sheet_handle =
+      load_sprite_sheet(resources, "texture/icy.png", "texture/icy.ron");
     resources.insert(GameAssets {
       square_font: font_handle,
+      map_sprite_sheet: load_sprite_sheet_handle,
     });
   }
 }
@@ -39,9 +47,24 @@ impl SimpleState for LoadingState {
 
   fn update(&mut self, _: &mut StateData<'_, GameData>) -> SimpleTrans {
     if self.progress_counter.is_complete() {
+      println!("Loading complete...");
       Trans::Switch(Box::new(GameState::default()))
     } else {
+      println!("Loading...");
       Trans::None
     }
   }
+}
+
+fn load_sprite_sheet(
+  resources: &mut Resources,
+  png_path: &str,
+  ron_path: &str,
+) -> Handle<SpriteSheet> {
+  let loader = resources.get::<DefaultLoader>().expect("Get Loader");
+  let texture: Handle<Texture> = loader.load(png_path);
+  let sprites: Handle<Sprites> = loader.load(ron_path);
+  println!("{:?}, {:?}", texture, sprites);
+  let sprite_sheet_store = resources.get::<ProcessingQueue<SpriteSheet>>().unwrap();
+  loader.load_from_data(SpriteSheet { texture, sprites }, (), &sprite_sheet_store)
 }
