@@ -1,7 +1,3 @@
-use crate::component::Velocity;
-use crate::hud::{DebugHud, Hud};
-use crate::tiles::{IcyTile, SteppeTile};
-
 use amethyst::{
   core::{math::Vector3, transform::Transform, Named},
   input::{is_close_requested, is_key_down},
@@ -12,15 +8,19 @@ use amethyst::{
   winit,
 };
 
+use crate::{
+  component::Velocity,
+  config::AppConfig,
+  hud::{DebugHud, Hud},
+  tiles::{IcyTile, SteppeTile},
+};
+
 use super::loader::GameAssets;
 
 #[derive(Default)]
 pub struct GameState {
   debug_hud: Option<DebugHud>,
 }
-
-const TILEMAP_WIDTH: u32 = 10;
-const TILEMAP_HEIGHT: u32 = 8;
 
 impl SimpleState for GameState {
   fn on_start(&mut self, data: StateData<'_, GameData>) {
@@ -32,6 +32,11 @@ impl SimpleState for GameState {
       let assets = resources.get::<GameAssets>().expect("Get game assets");
       (assets.square_font.clone(), assets.tile_map.clone())
     };
+
+    let app_config = resources
+      .get::<AppConfig>()
+      .expect("Get game assets")
+      .clone();
 
     let mut hud = DebugHud::new(font);
     hud.enable(world, resources);
@@ -55,8 +60,8 @@ impl SimpleState for GameState {
     });
 
     let tilemap = TileMap::<IcyTile, MortonEncoder>::new(
-      Vector3::new(TILEMAP_WIDTH, TILEMAP_HEIGHT, 2),
-      Vector3::new(128, 128, 1),
+      Vector3::new(app_config.tile_map.width, app_config.tile_map.height, 2),
+      Vector3::new(app_config.tiles.width, app_config.tiles.height, 1),
       Some(map_sprite_sheet),
     );
     world.push((

@@ -42,9 +42,6 @@ pub fn get_map_index(x: u32, y: u32, width: u32) -> u32 {
 
 impl Tile for IcyTile {
   fn sprite(&self, pos: Point3<u32>, _: &World, _: &Resources) -> Option<usize> {
-    // let level = (*world.read_resource::<MapLayers>()).0;
-    // let index = get_map_index(pos[0], pos[1], TILEMAP_WIDTH) as usize;
-    // return Some(level[pos[2] as usize][index] as usize);
     if pos[2] == 0 {
       Some(ICY_DEFAULT)
     } else {

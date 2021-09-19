@@ -1,0 +1,18 @@
+(
+  tiles: (
+    width: 128,
+    height: 128,   
+  ),
+  tile_map: (
+    width: 20,
+    height: 8,
+  ),
+  game: (
+    map: (
+      width: 5000,
+      height: 8,
+    ),
+    show_hud: true,
+    show_debug_hud: true,
+  )
+)
