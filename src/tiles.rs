@@ -26,12 +26,19 @@ const STEPPE_ARTIFACT_1_2: usize = 20;
 const STEPPE_ARTIFACT_2_1: usize = 21;
 const STEPPE_ARTIFACT_2_2: usize = 22;
 
+pub const MAP_LAYERS: usize = 2;
+pub const MAP_WIDTH: usize = 50 * 8;
+
+pub type LevelMap = [u32; MAP_WIDTH];
+
+pub struct MapLayers(pub [LevelMap; MAP_LAYERS]);
+
 #[derive(Default, Clone)]
 pub struct IcyTile;
 
-// pub fn get_map_index(x: u32, y: u32, width: u32) -> u32 {
-//   return x + y * width;
-// }
+pub fn get_map_index(x: u32, y: u32, width: u32) -> u32 {
+  return x + y * width;
+}
 
 impl Tile for IcyTile {
   fn sprite(&self, pos: Point3<u32>, _: &World, _: &Resources) -> Option<usize> {
@@ -56,7 +63,7 @@ impl Tile for IcyTile {
 #[derive(Default, Clone)]
 pub struct SteppeTile;
 impl Tile for SteppeTile {
-  fn sprite(&self, pos: Point3<u32>, _: &World, _: &Resources) -> Option<usize> {
+  fn sprite(&self, _: Point3<u32>, _: &World, _: &Resources) -> Option<usize> {
     Some(STEPPE_BOTTOM)
   }
 }
@@ -64,8 +71,18 @@ impl Tile for SteppeTile {
 #[derive(Default, Clone)]
 pub struct MixedSteppeIcyTile;
 impl Tile for MixedSteppeIcyTile {
-  fn sprite(&self, pos: Point3<u32>, _: &World, _: &Resources) -> Option<usize> {
+  fn sprite(&self, _: Point3<u32>, _: &World, _: &Resources) -> Option<usize> {
     Some(ICY_DEFAULT)
+  }
+}
+
+#[derive(Default, Clone)]
+pub struct ResourceTile;
+impl Tile for ResourceTile {
+  fn sprite(&self, pos: Point3<u32>, _: &World, resources: &Resources) -> Option<usize> {
+    let level = resources.get::<MapLayers>().expect("Reading map").0;
+    let index = get_map_index(pos[0], pos[1], MAP_WIDTH as u32) as usize;
+    Some(level[pos[2] as usize][index] as usize)
   }
 }
 
