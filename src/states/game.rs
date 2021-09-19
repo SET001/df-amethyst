@@ -9,7 +9,7 @@ use amethyst::{
 };
 
 use crate::{
-  component::Velocity,
+  component::{TileRotate, Velocity},
   config::AppConfig,
   hud::{DebugHud, Hud},
   tiles::{IcyTile, SteppeTile},
@@ -72,6 +72,7 @@ impl SimpleState for GameState {
         y: 0.0,
         z: 0.0,
       },
+      TileRotate::default(),
     ));
   }
 

@@ -1,9 +1,12 @@
-use crate::config::AppConfig;
-use crate::system::VelocitySystem;
 use amethyst::{
   config::{Config, ConfigError},
   core::ecs::{DispatcherBuilder, Resources, SystemBundle, World},
   error::Error,
+};
+
+use crate::{
+  config::AppConfig,
+  system::{TileRotateSystem, VelocitySystem},
 };
 
 pub struct DfBundle {
@@ -27,7 +30,9 @@ impl SystemBundle for DfBundle {
     builder: &mut DispatcherBuilder,
   ) -> Result<(), Error> {
     resources.insert(self.config.clone());
-    builder.add_system(VelocitySystem);
+    builder
+      .add_system(VelocitySystem)
+      .add_system(TileRotateSystem);
     Ok(())
   }
 }

@@ -1,7 +1,4 @@
-// mod rangedScroller;
-// mod scroller;
-// mod scrollerTile;
-// mod tileRotate;
+mod tileRotate;
 mod velocity;
 
-pub use velocity::*;
+pub use {tileRotate::TileRotateSystem, velocity::VelocitySystem};

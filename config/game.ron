@@ -4,7 +4,7 @@
     height: 128,   
   ),
   tile_map: (
-    width: 20,
+    width: 30,
     height: 8,
   ),
   game: (
