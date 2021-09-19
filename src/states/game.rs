@@ -13,10 +13,11 @@ use amethyst::{
     Texture,
   },
   tiles::{MortonEncoder, TileMap},
-  ui::FontAsset,
-  window::{ScreenDimensions, Window},
+  window::ScreenDimensions,
   winit,
 };
+
+use super::loader::GameAssets;
 
 #[derive(Default)]
 pub struct GameState {
@@ -28,31 +29,28 @@ const TILEMAP_HEIGHT: u32 = 8;
 
 impl SimpleState for GameState {
   fn on_start(&mut self, data: StateData<'_, GameData>) {
+    println!("Starting Game state...");
+
     let world = data.world;
     let resources = data.resources;
 
-    let font_handle: Handle<FontAsset> = {
-      let loader = resources.get::<DefaultLoader>().expect("Get Loader");
-      loader.load("font/square.ttf")
+    let font = {
+      let assets = resources.get::<GameAssets>().expect("Get game assets");
+      assets.square_font.clone()
     };
 
-    let mut hud = DebugHud::new(font_handle);
+    let mut hud = DebugHud::new(font);
     hud.enable(world, resources);
-
     self.debug_hud = Some(hud);
 
     let (width, height) = {
       let dim = resources
         .get::<ScreenDimensions>()
         .expect("Read ScreenDimensions");
-      let window = resources.get::<Window>().expect("Read Window");
-      println!("dimensions: {:?}", dim);
-      println!("window: {:?}", window);
       (dim.width(), dim.height())
     };
     let mut transform = Transform::default();
     transform.set_translation_xyz(0.0, 0.0, 10.0);
-
     let camera = world.push((
       Named("camera".into()),
       transform,

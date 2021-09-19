@@ -27,7 +27,7 @@ mod system;
 mod tilemap;
 
 use bundle::DfBundle;
-use states::GameState;
+use states::{GameState, LoadingState};
 use tilemap::ExampleTile;
 
 fn main() -> amethyst::Result<()> {
@@ -57,7 +57,7 @@ fn main() -> amethyst::Result<()> {
       .with_plugin(RenderFlat2D::default())
       .with_plugin(RenderTiles2D::<ExampleTile, MortonEncoder>::default()),
   );
-  let game = Application::new(assets_dir, GameState::default(), dispatcher)?;
+  let game = Application::new(assets_dir, LoadingState::new(), dispatcher)?;
   game.run();
   Ok(())
 }

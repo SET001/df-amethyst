@@ -1,78 +1,47 @@
+use crate::GameState;
 use amethyst::{
-  assets::{AssetStorage, Handle, Loader, ProgressCounter},
+  assets::{DefaultLoader, Handle, Loader, ProgressCounter},
   prelude::*,
-  renderer::{formats::texture::ImageFormat, Texture},
+  ui::FontAsset,
 };
-use enum_map::{enum_map, Enum, EnumMap};
-use serde::Deserialize;
 
-#[derive(Debug, Deserialize, Enum)]
-
-pub enum Assets {
-  SKY,
-  EARTH,
-  MOON,
-  MOON_SMALL,
+pub struct GameAssets {
+  pub square_font: Handle<FontAsset>,
 }
 
-#[derive(Debug)]
-pub struct HandleDesc {
-  name: String,
-  handle: Handle<Texture>,
-}
-
-pub type AssetsMap = EnumMap<Assets, (Option<Handle<Texture>>, u32, u32)>;
-
-pub struct LoadingState<'a> {
-  assets_config: EnumMap<Assets, (&'a str, u32, u32)>,
+pub struct LoadingState {
   progress_counter: ProgressCounter,
 }
 
-impl<'a> LoadingState<'a> {
-  pub fn new() -> LoadingState<'a> {
+impl LoadingState {
+  pub fn new() -> LoadingState {
     LoadingState {
       progress_counter: ProgressCounter::new(),
-      assets_config: enum_map! {
-        Assets::SKY => ("texture/backgrounds/space6/bright/sky.png", 1920, 1080),
-        Assets::EARTH => ("texture/backgrounds/space6/bright/earth.png", 1920, 1080),
-        Assets::MOON => ("texture/backgrounds/space6/bright/moon.png", 1920, 1080),
-        Assets::MOON_SMALL => ("texture/backgrounds/space6/bright/moon_small.png", 232, 232),
-      },
     }
   }
 
-  fn load<T>(&mut self, world: &World) -> AssetsMap {
-    let loader = world.read_resource::<Loader>();
-    let mut handles = AssetsMap::new();
-    for (k, v) in &self.assets_config {
-      handles[k] = (
-        Some(loader.load(
-          v.0.to_string(),
-          ImageFormat::default(),
-          &mut self.progress_counter,
-          &world.read_resource::<AssetStorage<Texture>>(),
-        )),
-        v.1,
-        v.2,
-      )
-    }
-    return handles;
+  fn load(&mut self, resources: &mut Resources) {
+    let font_handle: Handle<FontAsset> = {
+      let loader = resources.get::<DefaultLoader>().expect("Get Loader");
+      loader.load("font/square.ttf")
+    };
+    resources.insert(GameAssets {
+      square_font: font_handle,
+    });
   }
 }
 
-impl SimpleState for LoadingState<'_> {
+impl SimpleState for LoadingState {
   fn on_start(&mut self, data: StateData<'_, GameData>) {
-    println!("loading assets...");
-    let handles = self.load::<Texture>(&data.world);
-    data.world.insert(handles);
+    println!("Starting Loader state...");
+    self.load(data.resources);
   }
 
-  // fn update(&mut self, data: StateData<'_, GameData>) -> SimpleTrans {
-  //   if self.progress_counter.is_complete() {
-  //     println!("assets loading complete...");
-  //     Trans::Switch(Box::new(GameState::default()))
-  //   } else {
-  //     Trans::None
-  //   }
-  // }
+  fn update(&mut self, _: &mut StateData<'_, GameData>) -> SimpleTrans {
+    if self.progress_counter.is_complete() {
+      Trans::Switch(Box::new(GameState::default()))
+    } else {
+      Trans::None
+    }
+  }
 }
