@@ -1,4 +1,5 @@
 /target
+misc
 **/*.rs.bk
 # Distill Assets
 .assets_db
