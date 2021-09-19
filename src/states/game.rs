@@ -1,4 +1,5 @@
 use crate::component::Velocity;
+use crate::hud::{DebugHud, Hud};
 use crate::tilemap::ExampleTile;
 
 use amethyst::{
@@ -12,16 +13,14 @@ use amethyst::{
     Texture,
   },
   tiles::{MortonEncoder, TileMap},
-  ui::{Anchor, FontAsset, LineMode, UiLabel, UiLabelBuilder, UiText},
-  utils::fps_counter::FpsCounter,
+  ui::FontAsset,
   window::{ScreenDimensions, Window},
   winit,
 };
 
 #[derive(Default)]
 pub struct GameState {
-  fpsLabel: Option<UiLabel>,
-  world_entries_count_label: Option<UiLabel>,
+  debug_hud: Option<DebugHud>,
 }
 
 const TILEMAP_WIDTH: u32 = 10;
@@ -30,7 +29,17 @@ const TILEMAP_HEIGHT: u32 = 8;
 impl SimpleState for GameState {
   fn on_start(&mut self, data: StateData<'_, GameData>) {
     let world = data.world;
-    let mut resources = data.resources;
+    let resources = data.resources;
+
+    let font_handle: Handle<FontAsset> = {
+      let loader = resources.get::<DefaultLoader>().expect("Get Loader");
+      loader.load("font/square.ttf")
+    };
+
+    let mut hud = DebugHud::new(font_handle);
+    hud.enable(world, resources);
+
+    self.debug_hud = Some(hud);
 
     let (width, height) = {
       let dim = resources
@@ -69,31 +78,10 @@ impl SimpleState for GameState {
         z: 0.0,
       },
     ));
-    let font_handle: Handle<FontAsset> = {
-      let loader = resources.get::<DefaultLoader>().expect("Get Loader");
-      loader.load("font/square.ttf")
-    };
-    let (id, label) = UiLabelBuilder::<(), u32>::new(&"Multiline\nText!")
-      .with_line_mode(LineMode::Wrap)
-      .with_position(100., -50.)
-      .with_size(400., 200.)
-      .with_anchor(Anchor::TopLeft)
-      .with_font(font_handle.clone())
-      .with_font_size(30.)
-      .with_text_color([0.34, 0.36, 0.52, 1.0])
-      .build_from_world_and_resources(world, resources);
-    self.fpsLabel = Some(label);
+  }
 
-    let (id, label) = UiLabelBuilder::<(), u32>::new(&"world_entries_count_label")
-      .with_line_mode(LineMode::Wrap)
-      .with_position(100., -100.)
-      .with_size(400., 200.)
-      .with_anchor(Anchor::TopLeft)
-      .with_font(font_handle.clone())
-      .with_font_size(30.)
-      .with_text_color([0.34, 0.36, 0.52, 1.0])
-      .build_from_world_and_resources(world, resources);
-    self.world_entries_count_label = Some(label);
+  fn on_stop(&mut self, data: StateData<GameData>) {
+    data.world.clear();
   }
 
   fn handle_event(&mut self, data: StateData<'_, GameData>, event: StateEvent) -> SimpleTrans {
@@ -110,32 +98,8 @@ impl SimpleState for GameState {
   }
 
   fn update(&mut self, data: &mut StateData<'_, GameData>) -> SimpleTrans {
-    let world_len = data.world.len();
-
-    if self.world_entries_count_label.is_some() {
-      if let Some(entry) = data
-        .world
-        .entry(self.world_entries_count_label.as_ref().unwrap().text_entity)
-      {
-        match entry.into_component_mut::<UiText>() {
-          Ok(text) => text.text = format!("Entries: {:.*}", 2, world_len),
-          Err(_) => (),
-        };
-      }
-    }
-
-    if self.fpsLabel.is_some() {
-      let fps = data.resources.get::<FpsCounter>().unwrap().sampled_fps();
-      if let Some(entry) = data
-        .world
-        .entry(self.fpsLabel.as_ref().unwrap().text_entity)
-      {
-        match entry.into_component_mut::<UiText>() {
-          Ok(text) => text.text = format!("FPS: {:.*}", 2, fps),
-          Err(_) => (),
-        };
-      }
-    }
+    let hud = self.debug_hud.as_ref().unwrap();
+    hud.on_update(data.world, data.resources);
 
     Trans::None
   }

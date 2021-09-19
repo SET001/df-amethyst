@@ -21,6 +21,7 @@ use amethyst::{
 mod bundle;
 mod component;
 // mod level;
+mod hud;
 mod states;
 mod system;
 mod tilemap;
