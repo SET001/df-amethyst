@@ -12,6 +12,7 @@ use amethyst::{
 pub struct GameAssets {
   pub square_font: Handle<FontAsset>,
   pub tile_map: Handle<SpriteSheet>,
+  pub spaceships: Handle<SpriteSheet>,
 }
 
 pub struct LoadingState {
@@ -32,9 +33,15 @@ impl LoadingState {
     };
     let tile_map_handle =
       load_sprite_sheet(resources, "texture/tilemap.png", "texture/tilemap.ron");
+    let spaceships_handle = load_sprite_sheet(
+      resources,
+      "texture/spaceships.png",
+      "texture/spaceships.ron",
+    );
     resources.insert(GameAssets {
       square_font: font_handle,
       tile_map: tile_map_handle,
+      spaceships: spaceships_handle,
     });
   }
 }

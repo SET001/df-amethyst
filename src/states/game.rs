@@ -1,8 +1,15 @@
 use amethyst::{
-  core::{math::Vector3, transform::Transform, Named},
+  core::{
+    math::{Translation3, UnitQuaternion, Vector3},
+    transform::Transform,
+    Named,
+  },
   input::{is_close_requested, is_key_down},
   prelude::*,
-  renderer::camera::{ActiveCamera, Camera},
+  renderer::{
+    camera::{ActiveCamera, Camera},
+    sprite::SpriteRender,
+  },
   tiles::{MortonEncoder, TileMap},
   window::ScreenDimensions,
   winit,
@@ -28,9 +35,13 @@ impl SimpleState for GameState {
 
     let world = data.world;
     let resources = data.resources;
-    let (font, map_sprite_sheet) = {
+    let (font, map_sprite_sheet, spaceships_sheet) = {
       let assets = resources.get::<GameAssets>().expect("Get game assets");
-      (assets.square_font.clone(), assets.tile_map.clone())
+      (
+        assets.square_font.clone(),
+        assets.tile_map.clone(),
+        assets.spaceships.clone(),
+      )
     };
 
     let app_config = resources
@@ -59,6 +70,14 @@ impl SimpleState for GameState {
       entity: Some(camera),
     });
 
+    world.push((
+      SpriteRender::new(spaceships_sheet.clone(), 0),
+      Transform::new(
+        Translation3::new(0.0, 0.0, 5.0),
+        UnitQuaternion::from_euler_angles(0., 0., -1.5708),
+        Vector3::new(1.0, 1.0, 1.0),
+      ),
+    ));
     let tilemap = TileMap::<IcyTile, MortonEncoder>::new(
       Vector3::new(app_config.tile_map.width, app_config.tile_map.height, 2),
       Vector3::new(app_config.tiles.width, app_config.tiles.height, 1),
