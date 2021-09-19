@@ -12,3 +12,4 @@ log = { version = "0.4.8", features = ["serde"] }
 enum-map = { version = "0.6.2", features = ["serde"]}
 uuid = { version = "0.8", features = ["serde", "v4"] }
 rand = "0.7.3"
+derivative = "2.2.0"
