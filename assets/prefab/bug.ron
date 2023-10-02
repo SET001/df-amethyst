@@ -1,0 +1,26 @@
+Prefab(
+  id: "14dec17f-ae14-40a3-8e44-e487fc423287",
+  objects: [
+    Entity((
+      id: "62b3dbd1-56a8-469e-a262-41a66321da8b",
+      components: [
+        (
+          type: "a12ccc08-c89b-4476-96ec-1c9b04d34aa2",
+          data: UiText(
+            text: "asdas asd dsad asdasd",
+          )
+        ),
+        (
+          type: "d900c11d-f8b2-4145-8a19-537a67d5ee85",
+          data: (
+            x: 500,
+            y: 500,
+            width: 200,
+            height: 200
+          )
+        )
+        
+      ]
+    ))
+  ]
+)
