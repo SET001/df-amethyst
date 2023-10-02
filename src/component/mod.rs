@@ -1,9 +1,5 @@
-// mod dimensions;
-// mod scroller;
-// mod tileGenerator;
-// mod tileMap;
+mod mouseController;
 mod tileRotate;
 mod velocity;
 
-pub use tileRotate::TileRotate;
-pub use velocity::*;
+pub use {mouseController::MouseController, tileRotate::TileRotate, velocity::Velocity};

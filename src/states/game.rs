@@ -23,6 +23,7 @@ use crate::{
 };
 
 use super::loader::GameAssets;
+use rand::{thread_rng, Rng};
 
 #[derive(Default)]
 pub struct GameState {
@@ -60,7 +61,7 @@ impl SimpleState for GameState {
       (dim.width(), dim.height())
     };
     let mut transform = Transform::default();
-    transform.set_translation_xyz(0.0, 0.0, 10.0);
+    transform.set_translation_xyz(width / 2., height / -2., 10.0);
     let camera = world.push((
       Named("camera".into()),
       transform,
@@ -73,19 +74,28 @@ impl SimpleState for GameState {
     world.push((
       SpriteRender::new(spaceships_sheet.clone(), 0),
       Transform::new(
-        Translation3::new(0.0, 0.0, 5.0),
+        Translation3::new(0.0, -200.0, 5.0),
         UnitQuaternion::from_euler_angles(0., 0., -1.5708),
         Vector3::new(1.0, 1.0, 1.0),
       ),
+      Velocity {
+        x: 2.,
+        y: 0.,
+        z: 0.,
+      },
     ));
+
     let tilemap = TileMap::<IcyTile, MortonEncoder>::new(
       Vector3::new(app_config.tile_map.width, app_config.tile_map.height, 2),
       Vector3::new(app_config.tiles.width, app_config.tiles.height, 1),
       Some(map_sprite_sheet),
     );
+
+    let tmx = app_config.tile_map.width * app_config.tiles.width / 2;
+    let tmy = (app_config.tile_map.height * app_config.tiles.height) as f32 / -2.0;
     world.push((
       tilemap,
-      Transform::from(Vector3::new(0.0, 0.0, 0.0)),
+      Transform::from(Vector3::new(tmx as f32, tmy, 0.0)),
       Velocity {
         x: -1.0,
         y: 0.0,
@@ -93,6 +103,24 @@ impl SimpleState for GameState {
       },
       TileRotate::default(),
     ));
+
+    let mut rng = rand::thread_rng();
+    println!("kok");
+    for _ in (0..25000) {
+      world.push((
+        Transform::new(
+          Translation3::new(0.0, (rng.gen_range(0, height as u32) as f32) * -1., 5.0),
+          UnitQuaternion::from_euler_angles(0., 0., -1.5708),
+          Vector3::new(1.0, 1.0, 1.0),
+        ),
+        SpriteRender::new(spaceships_sheet.clone(), 0),
+        Velocity {
+          x: (rng.gen_range(1, 10000) as f32),
+          y: 0.0,
+          z: 0.0,
+        },
+      ));
+    }
   }
 
   fn on_stop(&mut self, data: StateData<GameData>) {

@@ -25,7 +25,7 @@ impl DebugHud {
     DebugHud {
       fps: None,
       world_entries: None,
-      color: [0.34, 0.36, 0.52, 1.0],
+      color: [1.0, 0.0, 0.0, 1.0],
       font_size: 30.,
       font,
     }
@@ -47,7 +47,7 @@ impl Hud for DebugHud {
 
     let (_, label) = UiLabelBuilder::<(), u32>::new(&"world_entries_count_label")
       .with_line_mode(LineMode::Wrap)
-      .with_position(100., -100.)
+      .with_position(150., -100.)
       .with_size(400., 200.)
       .with_anchor(Anchor::TopLeft)
       .with_font(self.font.clone())

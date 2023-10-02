@@ -1,12 +1,16 @@
 use amethyst::{
   config::{Config, ConfigError},
-  core::ecs::{DispatcherBuilder, Resources, SystemBundle, World},
+  core::{
+    ecs::{DispatcherBuilder, Resources, SystemBundle, World},
+    EventChannel,
+  },
   error::Error,
+  input::InputEvent,
 };
 
 use crate::{
   config::AppConfig,
-  system::{TileRotateSystem, VelocitySystem},
+  system::{MouseControllerSystem, TileRotateSystem, VelocitySystem},
 };
 
 pub struct DfBundle {
@@ -30,9 +34,17 @@ impl SystemBundle for DfBundle {
     builder: &mut DispatcherBuilder,
   ) -> Result<(), Error> {
     resources.insert(self.config.clone());
+    resources.insert(EventChannel::<InputEvent>::new());
+
+    let mouse_events_reader = resources
+      .get_mut::<EventChannel<InputEvent>>()
+      .unwrap()
+      .register_reader();
+
     builder
       .add_system(VelocitySystem)
-      .add_system(TileRotateSystem);
+      .add_system(TileRotateSystem)
+      .add_system(MouseControllerSystem::new(mouse_events_reader));
     Ok(())
   }
 }

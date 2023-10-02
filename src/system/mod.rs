@@ -1,4 +1,7 @@
+mod mouseController;
 mod tileRotate;
 mod velocity;
 
-pub use {tileRotate::TileRotateSystem, velocity::VelocitySystem};
+pub use {
+  mouseController::MouseControllerSystem, tileRotate::TileRotateSystem, velocity::VelocitySystem,
+};
